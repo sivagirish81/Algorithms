@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+<title>Animation of Euclid's GCD Algorithm</title>
+<script type = "text/javascript"> 
+
+var TargetTick;
+var Tick;
+var Timer1;
+var  gcd_a, gcd_b; // Input to GCD
+var offsetTop; 
+
+var arr0 = "<span id='arr0' >&darr;</span>";
+var arr1 = "<span id='arr1' >&uarr;</span>";
+
+var result = "<span class='result' >?</span>";
+
+ 
+function ExecuteGCD()
+{    
+     var Speed = 1000; 
+
+   offsetTop= -68; 
+   gcd_a = parseInt(txt_a.value);
+   gcd_b = parseInt(txt_b.value);
+
+   OutList.innerHTML ="";
+
+     TargetTick=1; 
+    
+   // Start animation
+   if (Timer1) clearInterval(Timer1);
+   
+      Timer1 = setInterval(AnimateGCD,Speed);  
+}
+  
+// The pattern for AnimateSomeProcedure() is:
+
+//  Set TragetTick =1 (in caller)
+//  Execute the procedure to be animated from start (Tick=0)  till (Tick=TragetTick)
+//  Increment TargetTick
+//  Execute the procedure to be animated from start (Tick=0)  till (Tick=TragetTick)
+//  Increment TargetTick
+//  Execute the procedure to be animated from start (Tick=0)  till (Tick=TragetTick)
+// Note: Tick is incremented in UpateTick()
+
+function AnimateGCD()  
+{  // This function is executed repeatedly via SetInterval()
+   // Note: TargetTick is incremented with every call to this function 
+   
+   Tick=0;
+   gcd(gcd_a,gcd_b); 
+  
+   TargetTick++;   
+}
+ 
+function EndAnimate()
+{  clearInterval(Timer1);  } 
+ 
+function UpdateTick()
+{  Tick++;
+   return (Tick == TargetTick);
+}
+
+
+function gcd(a,b)
+{ // last param of Print() is either -1 to mean gcd() is entered
+  // or positive (the gcd value) and also means gcd() is exited
+
+    if (UpdateTick()) 
+    { Print(a,b, -1);  return; }  
+  
+   var c = a % b;
+   
+   if (c==0)
+   {   if (UpdateTick())   
+       { Print(a,b, b); return; }  
+
+       return b; 
+   }
+   else 
+   {  var k = gcd(b,c);
+
+      if (UpdateTick())   
+      { Print(a,b, k); return; }  
+
+      return k;
+    }
+}
+
+
+
+function Print(a,b,c) 
+{ // 3rd parameter: if negative means gcd() is entered
+  // if positive means gcd() is exited and c is the result
+ 
+  // console.log(a,b,c);    
+
+   var posinfo="";
+   var extResult = "";
+   if  (c < 0)  
+   {  ext  = arr0; }
+   else
+   {  ext = arr1; posinfo = " style='left:180px; top:" + offsetTop +"px'"; 
+      offsetTop += -140;
+      extResult = result.replace("?",c); 
+   }
+      
+   var item  = "<li "  + posinfo  + " ><i>gcd</i>(" + a + "," +  b + ")" +  ext  + extResult + "</li>"; 
+   
+   OutList.innerHTML += item;  
+}
+ 
+</script>
+
+<style>
+
+body { margin-left:10px; }
+ul  { list-style-type: none;  }
+ 
+ul li { position:relative; font-size:14pt; border:1px solid gray;  width:120px; height:44px; margin-top:24px;
+text-align:center; line-height:46px;margin-leftzz:5px; border-radius: 18px; } 
+
+
+.target { color:red; background:white}
+
+.finished { background:yellow }
+
+ #arr0 , #arr1 { position:absolute;  padding:0; margin:0; font-weight:bold; font-size:20pt; font-weight:bold; } 
+
+ #arr0 { color: blue; top:30px; left: 56px;}
+ #arr1 { color: red; left: 56px;  top:30px;  } 
+
+ label,  input[type=button], p { font-size:1.1em; margin-left:8px; }
+
+ input[type=button] { margin-left:16px; padding:1px 12px; }
+
+ input[type=text]  { width:44px; } 
+ label { font-style: italic;  }
+
+  
+.result  { position:absolute; left:140px; top:4px; border:1px solid gray;  width:36px; height:36px; 
+text-align:center; line-height:36px;margin-left:5px; border-radius: 18px;background-color:lightyellow} 
+ 
+</style>
+</head>
+<body>
+<h2>Animation of Euclid's GCD Algorithm</h2>
+<p>
+Input two positive integers <i>a</i>, <i>b</i> (where <i>a</i> > <i>b</i>)
+</p>
+<label>Input <i>a</i>  
+<input type="text" id="txt_a" value="1048" />
+</label>
+
+
+<label>Input <i>b</i>  
+<input type="text" id="txt_b" value="72" />
+</label>
+
+
+<!--
+<label>Speed <select id="speedSelectList" >
+<option  value="2000" >slow</option>
+<option  value="600" >medium</option>
+<option  value="100" >fast</option>
+</select>
+</label>
+ -->
+
+<input type="button" value="Start"  onclick="ExecuteGCD()" />
+  
+<ul id="OutList" > 
+</ul>
+</body>
+</html>
