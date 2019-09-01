@@ -23,13 +23,17 @@ class splay_tree_implementation : public splay_tree
         int find(int);
         void insert(int);
         void remove(int);
-        Node* splay(Node* root,int key);
+        //Node* Rotate_Right(Node*);
+        //Node* Rotate_Left(Node*);
+        //Node* BSTinsert(Node*,int);
+        Node* splay(Node*,int);
         vector<int> post_order();
         vector<int> pre_order();
         ~splay_tree_implementation();
 };
 
 /*          Node Functions          */
+
 Node* createnode(int key)
 {
     Node *N=(Node*)malloc(sizeof(Node));
@@ -38,6 +42,39 @@ Node* createnode(int key)
     return N;
 }
 
+Node* Rotate_Right(Node* root)
+{
+    Node* temp=root->left;
+    root->left=temp->right;
+    temp->right=root;
+    return temp;
+}
+
+Node* Rotate_Left(Node* root)
+{
+    Node* temp=root->right;
+    root->right=temp->left;
+    temp->left=root;
+    return temp;
+}
+
+Node* BSTinsert(Node* root,int key)
+{
+    if (root==NULL)
+    {
+        root=createnode(key);
+        return root;
+    }
+    if (key<root->key)
+    {
+        root->left=BSTinsert(root->left,key);
+    }
+    else if (key>root->key)
+    {
+        root->right=BSTinsert(root->right,key);
+    }
+    return root;
+}
 /*          *************           */
 
 /*          Splay_Tree Functions          */
@@ -66,11 +103,109 @@ Node* splay_tree_implementation::splay(Node* root,int key)
     //If in case the key lies in the left subtree 
     if (root->key>key)
     {
-        //End of tree
+        //End of left subtree
         //Exit condition for recursion
         if (root->left==NULL)
         {
             return root;
         }
+
+        //2 Cases - key can be either to the left of root node or to the right of root node
+        Node* temp=root->left;
+        //left-left combination
+        if (temp->key>key)
+        {
+            temp->left=splay(temp->left,key);
+            root=Rotate_Right(root);
+        }
+        else if (temp->key<key)
+        {
+            temp->right=splay(temp->right,key);
+            root=Rotate_Left(root);
+        }
+        return (root->left==NULL)?root:Rotate_Right(root);
+    }
+    else
+    {
+        //End of Right subtree
+        //Exit condition for recursion
+        if (root->right==NULL)
+        {
+            return root;
+        }
+
+         //2 Cases - key can be either to the left of root node or to the right of root node
+        Node* temp=root->right;
+        //right-right combination
+        if (temp->key>key)
+        {
+            temp->right=splay(temp->right,key);
+            root=Rotate_Right(root);
+        }
+        else if (temp->key<key)
+        {
+            temp->left=splay(temp->left,key);
+            root=Rotate_Left(root);
+        }
+        return (root->left==NULL)?root:Rotate_Left(root);
     }
 }
+    
+int splay_tree_implementation::find(int key)
+{
+    if (root->key==key)
+    {
+        return 1;
+    }
+    return (splay(root,key)->key==key)?1:0;
+}
+
+void splay_tree_implementation::insert(int key)
+{
+    Node* new_node=createnode(key);
+    if (find(key)==0)
+    {
+
+    }
+
+}
+
+/*          ****************       */
+
+/*          Display Functions       */
+
+vector<int> pre_orderer(Node* root,vector<int>pre_order)
+{
+    if (root!=NULL)
+    {
+        pre_order.push_back(root->key);
+        pre_orderer(root->left,pre_order);
+        pre_orderer(root->right,pre_order);
+    }
+    return pre_order;
+}
+
+vector<int> splay_tree_implementation::pre_order()
+{
+    vector<int> pre_order;
+    return pre_orderer(root,pre_order);
+}
+
+vector<int> post_orderer(Node* root,vector<int>post_order)
+{
+    if (root!=NULL)
+    {
+        post_orderer(root->left,post_order);
+        post_orderer(root->right,post_order);
+        post_order.push_back(root->key);
+    }
+    return post_order;
+}
+
+vector<int> splay_tree_implementation::post_order()
+{
+    vector<int> post_order;
+    return post_orderer(root,post_order);
+}
+
+/*          ********                */
