@@ -75,6 +75,7 @@ Node* BSTinsert(Node* root,int key)
     }
     return root;
 }
+
 /*          *************           */
 
 /*          Splay_Tree Functions          */
@@ -162,12 +163,28 @@ int splay_tree_implementation::find(int key)
 
 void splay_tree_implementation::insert(int key)
 {
-    Node* new_node=createnode(key);
+    if (root==NULL)
+    {
+        root=createnode(key);
+        return;
+    }
     if (find(key)==0)
     {
-
+        root=BSTinsert(root,key);
     }
+    if (find(key))
+    {
+        return;
+    }
+}
 
+void splay_tree_implementation::remove(int key)
+{
+    if (root==NULL)
+    {
+        return;
+    }
+    
 }
 
 /*          ****************       */
