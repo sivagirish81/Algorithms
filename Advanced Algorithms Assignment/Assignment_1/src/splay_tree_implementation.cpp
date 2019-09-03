@@ -58,22 +58,45 @@ Node* Rotate_Left(Node* root)
     return temp;
 }
 
-Node* BSTinsert(Node* root,int key)
+Node* BSTinsert(Node* root,int key,int num_of_nodes)
 {
     if (root==NULL)
     {
         root=createnode(key);
+        num_of_nodes++;
         return root;
     }
     if (key<root->key)
     {
-        root->left=BSTinsert(root->left,key);
+        root->left=BSTinsert(root->left,key,num_of_nodes);
     }
     else if (key>root->key)
     {
-        root->right=BSTinsert(root->right,key);
+        root->right=BSTinsert(root->right,key,num_of_nodes);
     }
     return root;
+}
+
+int FindParent(Node* root,int key)
+{
+    Node* prev;
+    Node* temp=root;
+    while (temp!=NULL)
+    {
+        prev=temp;
+        if (temp->key<key)
+        {
+            temp=temp->left;
+        }
+        else if (temp->key>key)
+        {
+            temp=temp->right;
+        }
+        else
+        {
+            return prev->key;
+        }
+    }
 }
 
 Node* getInorderSuccessor(Node* root)
@@ -85,7 +108,7 @@ Node* getInorderSuccessor(Node* root)
     return root;
 }
 
-Node* BSTdelete(Node* root,int key)
+Node* BSTdelete(Node* root,int key,int num_of_nodes)
 {
     if (root==NULL)
     {
@@ -93,11 +116,11 @@ Node* BSTdelete(Node* root,int key)
     }
     if (key<root->key)
     {
-        root=BSTdelete(root->left,key);
+        root=BSTdelete(root->left,key,num_of_nodes);
     }
     else if (key>root->key)
     {
-        root=BSTdelete(root->right,key);
+        root=BSTdelete(root->right,key,num_of_nodes);
     }
     else
     {
@@ -105,21 +128,26 @@ Node* BSTdelete(Node* root,int key)
         if (root->left==NULL)
         {
             Node* temp=root->right;
-            free(root);
+            num_of_nodes--;
+            //free(root);
             return temp;
         }
         else if (root->right==NULL)
         {
             Node* temp=root->left;
-            free(root);
+            num_of_nodes--;
+            //free(root);
             return temp;
         }
 
         Node* temp=getInorderSuccessor(root->right);
-        free(root);
+        num_of_nodes--;
+        //free(root);
+        
         return temp;
     }
 }
+
 /*          *************           */
 
 /*          Splay_Tree Functions          */
@@ -209,11 +237,14 @@ void splay_tree_implementation::insert(int key)
         num_of_nodes+=1;
         return;
     }
+    /*
     if (find(key)==0)
     {
         root=BSTinsert(root,key);
         num_of_nodes+=1;
     }
+    */
+    root=BSTinsert(root,key,num_of_nodes);
     if (find(key))
     {
         return;
@@ -222,13 +253,22 @@ void splay_tree_implementation::insert(int key)
 
 void splay_tree_implementation::remove(int key)
 {
+    int k=num_of_nodes;
     if (root==NULL)
     {
         return;
     }
+    int Pkey=FindParent(root,key);
+    root=BSTdelete(root,key,num_of_nodes);
+    //If deletion was successful
+    if (k<num_of_nodes)
+    {
+        splay(root,Pkey);
+    }
+    //If deletion was unsucessful
     else
     {
-        root=BSTdelete(root,key);
+        find(key);
     }
 }
 
