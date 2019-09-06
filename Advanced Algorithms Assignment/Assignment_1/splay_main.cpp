@@ -18,8 +18,15 @@ int main()
     splay_node.insert(78);
     splay_node.insert(36);
     cout<<splay_node.get_num_nodes()<<"\n";
-    splay_node.remove(15);
-    cout<<splay_node.get_num_nodes()<<"\n";
+    splay_node.remove(93);
+    //cout<<splay_node.get_num_nodes()<<"\n";
+    //cout<<splay_node.find(15)<<"\n";
+    //cout<<splay_node.get_num_nodes()<<"\n";
+    //cout<<splay_node.find(93)<<"\n";
+    cout<<splay_node.find(7)<<"\n";
+    cout<<splay_node.find(93)<<"\n";
+    cout<<splay_node.find(6)<<"\n";
+
    /*
     splay_node.insert(1);
     splay_node.insert(2);
@@ -34,7 +41,7 @@ int main()
     */
     //splay_node.insert(1);
 
-    //splay_node.print_post_order();
+    splay_node.print_post_order();
     /*
     splay_node.remove(19);
     splay_node.remove(18);

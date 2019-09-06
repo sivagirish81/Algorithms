@@ -26,7 +26,7 @@ class splay_tree_implementation : public splay_tree
         Node* Rotate_Right(Node*);
         Node* Rotate_Left(Node*);
         Node* BSTinsert(Node*,int);
-        Node* BSTdelete(Node*,int);
+        Node* BSTdelete(Node*,int,Node**);
         Node* splay(Node*,int);
         vector<int> post_order();
         vector<int> pre_order();
@@ -34,6 +34,8 @@ class splay_tree_implementation : public splay_tree
         vector<int> pre_orderer(Node* root,vector<int>);
         Node* getInorderSuccessor(Node*);
         int FindParent(Node*,int);
+        void print_post_order();
+        void print_post_orderer(Node*);
         //~splay_tree_implementation();
 };
 
@@ -77,32 +79,29 @@ Node* splay_tree_implementation::Rotate_Left(Node* root)
 
 Node* splay_tree_implementation::BSTinsert(Node* root,int key)
 {
-    //cout<<"BST INSERT\n";
     if (root==NULL)
     {
-        //cout<<"First time\n";
         root=createnode(key);
         num_of_nodes++;
         return root;
     }
     if (key<root->key)
     {
-        //cout<<"I'm Here left\n";
         root->left=BSTinsert(root->left,key);
     }
     else if (key>root->key)
     {
-        //cout<<"I'm Here right\n";
         root->right=BSTinsert(root->right,key);
     }
     return root;
 }
 
+
 int splay_tree_implementation::FindParent(Node* root,int key)
 {
-    if (root->left==NULL && root->right==NULL)
+    if (root->key==key || (root->left==NULL && root->right==NULL))
     {
-        return NULL;
+        return -1;
     }
     if ((root->left!=NULL && root->left->key==key)||(root->right!=NULL && root->right->key==key))
     {
@@ -118,16 +117,17 @@ int splay_tree_implementation::FindParent(Node* root,int key)
     }
 }
 
-Node* splay_tree_implementation::getInorderSuccessor(Node* root)
+
+Node* splay_tree_implementation::getInorderSuccessor(Node* root1)
 {
-    while (root && root->left)
+    while (root1 && root1->left)
     {
-        root=root->left;
+        root1=root1->left;
     }
-    return root;
+    return root1;
 }
 
-Node* splay_tree_implementation::BSTdelete(Node* root,int key)
+Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
 {
     //cout<<"BST Delete\n";
     if (root==NULL)
@@ -136,34 +136,35 @@ Node* splay_tree_implementation::BSTdelete(Node* root,int key)
     }
     if (key<root->key)
     {
-        root=BSTdelete(root->left,key);
+        *Parent=root;
+        root->left=BSTdelete(root->left,key,Parent);
     }
     else if (key>root->key)
     {
-        root=BSTdelete(root->right,key);
+        *Parent=root;
+        root->right=BSTdelete(root->right,key,Parent);
     }
     else
     {
         //Takes care of the case when ther is no left or right subtree as well
         if (root->left==NULL)
         {
-            Node* temp=root->right;
+            //Node* temp=root->right;
             num_of_nodes--;
-            //free(root);
-            return temp;
+            return root->right;
         }
         else if (root->right==NULL)
         {
-            Node* temp=root->left;
+            //Node* temp=root->left;
             num_of_nodes--;
-            //free(root);
-            return temp;
+            return root->left;
         }
 
         Node* temp=getInorderSuccessor(root->right);
+        //cout<<"Testing"<<temp->key<<"\n";
+        root->key=temp->key;
+        root->right=BSTdelete(root->right,temp->key,Parent);
         num_of_nodes--;
-        //free(root);
-        
         return temp;
     }
 }
@@ -320,49 +321,33 @@ Node* splay_tree_implementation::splay(Node *root, int key)
 }  
 int splay_tree_implementation::find(int key)
 {
-    return (splay(root,key)->key==key)?1:0;
+    root=splay(root,key);
+    return (root->key==key)?1:0;
 }
 
 void splay_tree_implementation::insert(int key)
 {
     root=BSTinsert(root,key);
-    //cout<<num_of_nodes<<"\n";
     root=splay(root,key);
 }
 
 void splay_tree_implementation::remove(int key)
 {
-    //int k=num_of_nodes;
     if (root==NULL)
     {
-        //cout<<"Hi\n";
         return;
     }
-    int Pkey;
-    int flag=0;
-    //cout<<"root"<<root->key<<"\n";
-    if (root->key!=key)
-    {
-        //cout<<"fe\n";
-        Pkey=FindParent(root,key);
-        //cout<<Pkey<<"\n";
-        flag=1;
-    }
-    root=BSTdelete(root,key);
-    //If deletion was successful
+    Node* Parent=NULL;
+    root=BSTdelete(root,key,&Parent);
+    int Pkey=Parent->key;
+    cout<<Pkey<<"\n";
     //cout<<num_of_nodes<<"\n";
-    
-    if (Pkey)
+    if (Pkey!=-1)
     {
-        splay(root,Pkey);
+        root=splay(root,Pkey);
+        return;
     }
-    //If deletion was unsucessful
-    else
-    {
-        //cout<<"Deletion Unsuccessful\n";
-        find(key);
-    }
-    
+    root=splay(root,key);
 }
 
 /*          ****************       */
@@ -404,17 +389,21 @@ vector<int> splay_tree_implementation::post_order()
 }
 
 //Test
-/*
+
 void splay_tree_implementation::print_post_orderer(Node* root)
 {
-    print_post_orderer(root->left);
-    print_post_orderer(root->right);
-    cout<<root->key;
+    if (root!=NULL)
+    {
+        //cout<<"HI";
+        print_post_orderer(root->left);
+        print_post_orderer(root->right);
+        cout<<root->key<<" ";
+    }
 }
 
 void splay_tree_implementation::print_post_order()
 {
     print_post_orderer(root);
 }
-*/
+
 /*          ********                */
