@@ -55,7 +55,7 @@ void dynamic_array_implementation::set_increase_factor_table_size(double increas
 }
 void dynamic_array_implementation::set_load_factor_reduction(double decrease_factor)
 {
-    capacity*=decrease_factor*2;
+    capacity*=decrease_factor*increase_factor;
     int *temp=(int*)malloc(sizeof(int)*capacity);
     //arr=(int*)realloc(arr,sizeof(int)*capacity);
     std::copy(arr,arr+size,temp);

@@ -9,7 +9,7 @@ int main()
     dynamic_array_implementation array;
 
     //Output should be 1
-    /*
+    
     array.append(1);
     cout<<array.get(0)<<"\n";
     cout<<array.get_capacity()<<"\n";
@@ -44,7 +44,7 @@ int main()
     cout<<array.get_capacity()<<"\n";
     cout<<array.get(3);
 
-    */
+    
 
     return 0;
     

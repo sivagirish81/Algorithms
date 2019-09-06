@@ -45,7 +45,6 @@ splay_tree_implementation::splay_tree_implementation()
 {
     //Variable to keep track of number of nodes
     num_of_nodes=0;
-    //Root node
     root=NULL;
 }
 
@@ -55,6 +54,7 @@ splay_tree_implementation::splay_tree_implementation()
 
 Node* splay_tree_implementation::createnode(int key)
 {
+    //Node Creation
     Node *N=(Node*)malloc(sizeof(Node));
     N->key=key;
     N->left=N->right=NULL;
@@ -96,7 +96,8 @@ Node* splay_tree_implementation::BSTinsert(Node* root,int key)
     return root;
 }
 
-
+//Finds the parent node of a node with a given key
+//Returns -1 incase it is not found
 int splay_tree_implementation::FindParent(Node* root,int key)
 {
     if (root->key==key || (root->left==NULL && root->right==NULL))
@@ -117,7 +118,7 @@ int splay_tree_implementation::FindParent(Node* root,int key)
     }
 }
 
-
+//Finds the inorder successor of the given node
 Node* splay_tree_implementation::getInorderSuccessor(Node* root1)
 {
     while (root1 && root1->left)
@@ -127,6 +128,7 @@ Node* splay_tree_implementation::getInorderSuccessor(Node* root1)
     return root1;
 }
 
+//Deletes a node with key=key in a BST fashion
 Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
 {
     //cout<<"BST Delete\n";
@@ -146,22 +148,19 @@ Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
     }
     else
     {
-        //Takes care of the case when ther is no left or right subtree as well
+        //Takes care of the case when there is no left or right subtree as well
         if (root->left==NULL)
         {
-            //Node* temp=root->right;
             num_of_nodes--;
             return root->right;
         }
         else if (root->right==NULL)
         {
-            //Node* temp=root->left;
             num_of_nodes--;
             return root->left;
         }
 
         Node* temp=getInorderSuccessor(root->right);
-        //cout<<"Testing"<<temp->key<<"\n";
         root->key=temp->key;
         root->right=BSTdelete(root->right,temp->key,Parent);
         num_of_nodes--;
@@ -179,146 +178,69 @@ int splay_tree_implementation::get_num_nodes()
     return num_of_nodes;
 }
 
-/*
 //Moves a node to the root
-Node* splay_tree_implementation::splay(Node* root,int key)
+Node* splay_tree_implementation::splay(Node *root, int key)  
 {
     //If in case the tree's empty or the given key is at the root then the root node itself will be splayed
-    if (root==NULL || root->key==key)
+    //No extra operation required as root node is aldready at the top
+    if (root == NULL || root->key == key)
     {
-        //cout<<"test\n";
         return root;
     }
-    //If in case the key lies in the left subtree 
-    if (root->key>key)
+
+    //If in case the key lies in the left subtree   
+    if (root->key > key)
     {
         //End of left subtree
-        //Exit condition for recursion
-        if (root->left==NULL)
+        //Exit condition for recursion 
+        if (root->left == NULL)
         {
             return root;
-        }
-
+        }  
+  
         //2 Cases - key can be either to the left of root node or to the right of root node
-        Node* temp=root->left;
         //left-left combination
-        if (temp->key>key)
+        if (root->left->key > key)  
         {
-            temp->left=splay(temp->left,key);
-            root->left=temp;
-            root=Rotate_Right(root);
-            //cout<<"zig - zig \n";
-        }
-        else if (temp->key<key)
-        {
-            temp->right=splay(temp->right,key);
-            root->left=temp;
+            root->left->left = splay(root->left->left, key);
+            root = Rotate_Right(root);
+        }  
+        else if (root->left->key<key)
+        { 
+            root->left->right = splay(root->left->right, key);  
             if (root->left->right != NULL)
-                root->left=Rotate_Left(root);
-            //cout<<"zig zag\n";
-        }
-        //cout<<"zag\n";
-        return (root->left==NULL)?root:Rotate_Right(root);
-    }
-    else
-    {
+            {
+                root->left = Rotate_Left(root->left);
+            }  
+        }  
+        return (root->left==NULL)? root: Rotate_Right(root);  
+    }  
+    else  
+    {  
         //End of Right subtree
-        //Exit condition for recursion
-        if (root->right==NULL)
+        //Exit condition for recursion  
+        if (root->right == NULL)
         {
             return root;
-        }
-
-         //2 Cases - key can be either to the left of root node or to the right of root node
-        Node* temp=root->right;
-        //right-right combination
-        if (temp->key<key)
-        {
-            temp->right=splay(temp->right,key);
-            root->right=temp;
-            root=Rotate_Left(root);
-            //cout<<"zag - zag\n";
-        }
-        else if (temp->key>key)
-        {
-            temp->left=splay(temp->left,key);
-            root->right=temp;
+        } 
+  
+        if (root->right->key > key)  
+        {    
+            root->right->left = splay(root->right->left, key);  
             if (root->right->left != NULL)
-                root=Rotate_Right(root);
-            //cout<<"zag zig\n"; 
+            {  
+                root->right = Rotate_Right(root->right);
+            } 
         }
-        //cout<<"Zig\n";
-        return (root->left==NULL)?root:Rotate_Left(root);
+        else if (root->right->key < key)  
+        { 
+            root->right->right = splay(root->right->right, key);  
+            root = Rotate_Left(root); 
+        }
+        return (root->right == NULL)? root: Rotate_Left(root);  
     }
 }
 
-*/
-
-Node* splay_tree_implementation::splay(Node *root, int key)  
-{  
-    // Base cases: root is NULL or 
-    // key is present at root  
-    if (root == NULL || root->key == key)  
-        return root;  
-  
-    // Key lies in left subtree  
-    if (root->key > key)  
-    {  
-        // Key is not in tree, we are done  
-        if (root->left == NULL) return root;  
-  
-        // Zig-Zig (Left Left)  
-        if (root->left->key > key)  
-        {  
-            // First recursively bring the 
-            // key as root of left-left  
-            root->left->left = splay(root->left->left, key);  
-  
-            // Do first rotation for root,  
-            // second rotation is done after else  
-            root = Rotate_Right(root);  
-        }  
-        else if (root->left->key < key) // Zig-Zag (Left Right)  
-        {  
-            // First recursively bring 
-            // the key as root of left-right  
-            root->left->right = splay(root->left->right, key);  
-  
-            // Do first rotation for root->left  
-            if (root->left->right != NULL)  
-                root->left = Rotate_Left(root->left);  
-        }  
-  
-        // Do second rotation for root  
-        return (root->left == NULL)? root: Rotate_Right(root);  
-    }  
-    else // Key lies in right subtree  
-    {  
-        // Key is not in tree, we are done  
-        if (root->right == NULL) return root;  
-  
-        // Zag-Zig (Right Left)  
-        if (root->right->key > key)  
-        {  
-            // Bring the key as root of right-left  
-            root->right->left = splay(root->right->left, key);  
-  
-            // Do first rotation for root->right  
-            if (root->right->left != NULL)  
-                root->right = Rotate_Right(root->right);  
-        }  
-        else if (root->right->key < key)// Zag-Zag (Right Right)  
-        {  
-            // Bring the key as root of  
-            // right-right and do first rotation  
-            root->right->right = splay(root->right->right, key);  
-            root = Rotate_Left(root);  
-        }  
-  
-        // Do second rotation for root  
-        return (root->right == NULL)? root: Rotate_Left(root);  
-    }  
-}  
 int splay_tree_implementation::find(int key)
 {
     root=splay(root,key);
@@ -340,8 +262,6 @@ void splay_tree_implementation::remove(int key)
     Node* Parent=NULL;
     root=BSTdelete(root,key,&Parent);
     int Pkey=Parent->key;
-    cout<<Pkey<<"\n";
-    //cout<<num_of_nodes<<"\n";
     if (Pkey!=-1)
     {
         root=splay(root,Pkey);
@@ -394,7 +314,6 @@ void splay_tree_implementation::print_post_orderer(Node* root)
 {
     if (root!=NULL)
     {
-        //cout<<"HI";
         print_post_orderer(root->left);
         print_post_orderer(root->right);
         cout<<root->key<<" ";
