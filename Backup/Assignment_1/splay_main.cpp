@@ -7,34 +7,16 @@ using namespace std;
 int main()
 {
     splay_tree_implementation splay_node;
-    
     splay_node.insert(12);
     splay_node.insert(6);
     splay_node.insert(15);
-    //splay_node.print_post_order();
-    splay_node.insert(93);
+    splay_node.print_post_order();
+    //splay_node.insert(93);
     splay_node.insert(7);
     splay_node.insert(72);
     splay_node.insert(78);
     splay_node.insert(36);
-    cout<<splay_node.get_num_nodes()<<"\n";
-    splay_node.remove(15);
-    cout<<splay_node.get_num_nodes()<<"\n";
-   /*
-    splay_node.insert(1);
-    splay_node.insert(2);
-    splay_node.insert(3);
-    splay_node.insert(4);
-    splay_node.insert(5);
-    splay_node.insert(6);
-    splay_node.insert(7);
-    splay_node.insert(8);
-    splay_node.insert(9);
-    splay_node.insert(10);
-    */
-    //splay_node.insert(1);
-
-    //splay_node.print_post_order();
+    splay_node.print_post_order();
     /*
     splay_node.remove(19);
     splay_node.remove(18);
