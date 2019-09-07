@@ -131,35 +131,43 @@ Node* splay_tree_implementation::getInorderSuccessor(Node* root1)
 //Deletes a node with key=key in a BST fashion
 Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
 {
-    //cout<<"BST Delete\n";
+    //If in case the BST is empty or the node to be deleted is not found
+    //Exit condition for recursion
     if (root==NULL)
     {
         return root;
     }
+    //If the node is in the left subtree.
     if (key<root->key)
     {
         *Parent=root;
         root->left=BSTdelete(root->left,key,Parent);
     }
+    //If the node is in the right subtree.
     else if (key>root->key)
     {
         *Parent=root;
         root->right=BSTdelete(root->right,key,Parent);
     }
+    //If we are aldready at the node.
     else
     {
         //Takes care of the case when there is no left or right subtree as well
+        //Right subtree exists or NULL
         if (root->left==NULL)
         {
             num_of_nodes--;
             return root->right;
         }
+        //Left subtree exists or NULL
         else if (root->right==NULL)
         {
             num_of_nodes--;
             return root->left;
         }
-
+        //When there exists both left and right subtree for the given node to be deletee
+        //Replace the node to be deleted with it's inorder successor
+        //Delete the inorder successor itself.
         Node* temp=getInorderSuccessor(root->right);
         root->key=temp->key;
         root->right=BSTdelete(root->right,temp->key,Parent);
@@ -172,7 +180,7 @@ Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
 
 /*          Splay_Tree Functions          */
 
-
+//Returns the total number of nodes in the tree
 int splay_tree_implementation::get_num_nodes()
 {
     return num_of_nodes;
@@ -241,32 +249,52 @@ Node* splay_tree_implementation::splay(Node *root, int key)
     }
 }
 
+//Returns 1 if the node is present in the tree and splays it to the root
+//Otherwise returns 0
 int splay_tree_implementation::find(int key)
 {
     root=splay(root,key);
     return (root->key==key)?1:0;
 }
 
+//Inserts the key into the tree
+//Splay's the node to the root
 void splay_tree_implementation::insert(int key)
 {
     root=BSTinsert(root,key);
     root=splay(root,key);
 }
 
+//Removes the node with key
 void splay_tree_implementation::remove(int key)
 {
+    //If the tree is empty then do nothing
     if (root==NULL)
     {
         return;
     }
+    //Stores a copy of the parent node to be splayed later
     Node* Parent=NULL;
     root=BSTdelete(root,key,&Parent);
-    int Pkey=Parent->key;
+    int Pkey;
+    //If the node deleted is not a root node
+    if (Parent!=NULL)
+    {
+        Pkey=Parent->key;
+    }
+    //If node to be deleted is root node do nothing
+    else
+    {
+        return;
+    }
+    //Splay the parent if it exists
     if (Pkey!=-1)
     {
         root=splay(root,Pkey);
         return;
     }
+    //If the node to be deleted was not found at all
+    //Splay the node closest to it
     root=splay(root,key);
 }
 
@@ -274,6 +302,7 @@ void splay_tree_implementation::remove(int key)
 
 /*          Display Functions       */
 
+//Vector containing the preorder traversal of the splay tree
 vector<int> splay_tree_implementation::pre_orderer(Node* root,vector<int> pre_order)
 {
     if (root!=NULL)
@@ -291,6 +320,7 @@ vector<int> splay_tree_implementation::pre_order()
     return pre_orderer(root,pre_order);
 }
 
+//Vector containing the postorder traversal of the splay tree
 vector<int> splay_tree_implementation::post_orderer(Node* root,vector<int> post_order)
 {
     if (root!=NULL)
@@ -308,8 +338,7 @@ vector<int> splay_tree_implementation::post_order()
     return post_orderer(root,post_order);
 }
 
-//Test
-
+//Prints the postorder traversal of the tree
 void splay_tree_implementation::print_post_orderer(Node* root)
 {
     if (root!=NULL)
