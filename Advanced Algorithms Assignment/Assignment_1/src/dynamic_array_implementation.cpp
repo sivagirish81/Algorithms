@@ -45,22 +45,12 @@ int dynamic_array_implementation::get_capacity()
 
 void dynamic_array_implementation::set_increase_factor_table_size(double increase_factor)
 {
-    capacity*=increase_factor;
-    int *temp=(int*)malloc(sizeof(int)*capacity);
-    //arr=(int*)realloc(arr,sizeof(int)*capacity);
-    std::copy(arr,arr+size,temp);
-    delete [] arr;
-    arr=temp;
+    this->increase_factor=increase_factor;
     return;
 }
 void dynamic_array_implementation::set_load_factor_reduction(double decrease_factor)
 {
-    capacity*=decrease_factor*increase_factor;
-    int *temp=(int*)malloc(sizeof(int)*capacity);
-    //arr=(int*)realloc(arr,sizeof(int)*capacity);
-    std::copy(arr,arr+size,temp);
-    delete [] arr;
-    arr=temp;
+    this->decrease_factor=decrease_factor;
     return;
 }
 
@@ -74,7 +64,12 @@ void dynamic_array_implementation::append(int element)
     }
     if (capacity < size)
     {
-        set_increase_factor_table_size(increase_factor);
+        capacity*=increase_factor;
+        int *temp=(int*)malloc(sizeof(int)*capacity);
+        //arr=(int*)realloc(arr,sizeof(int)*capacity);
+        std::copy(arr,arr+size,temp);
+        delete [] arr;
+        arr=temp;
     }
     arr[get_size()-1]=element;
     return;
@@ -82,10 +77,19 @@ void dynamic_array_implementation::append(int element)
 
 void dynamic_array_implementation::pop()
 {
+    if (size==0)
+    {
+        return;
+    }
     size-=1;
     if ((capacity*decrease_factor)>=size)
     {
-        set_load_factor_reduction(decrease_factor);
+        capacity*=decrease_factor*increase_factor;
+        int *temp=(int*)malloc(sizeof(int)*capacity);
+        //arr=(int*)realloc(arr,sizeof(int)*capacity);
+        std::copy(arr,arr+size,temp);
+        delete [] arr;
+        arr=temp;
     }
     return;
 }

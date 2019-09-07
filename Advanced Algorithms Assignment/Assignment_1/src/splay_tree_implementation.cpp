@@ -30,8 +30,8 @@ class splay_tree_implementation : public splay_tree
         Node* splay(Node*,int);
         vector<int> post_order();
         vector<int> pre_order();
-        vector<int> post_orderer(Node*,vector<int>);
-        vector<int> pre_orderer(Node* root,vector<int>);
+        vector<int> post_orderer(Node*,vector<int>*);
+        vector<int> pre_orderer(Node* root,vector<int>*);
         Node* getInorderSuccessor(Node*);
         int FindParent(Node*,int);
         void print_post_order();
@@ -121,6 +121,7 @@ int splay_tree_implementation::FindParent(Node* root,int key)
 //Finds the inorder successor of the given node
 Node* splay_tree_implementation::getInorderSuccessor(Node* root1)
 {
+    //cout<<"ROOT"<<root1->key<<"\n";
     while (root1 && root1->left)
     {
         root1=root1->left;
@@ -172,8 +173,8 @@ Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
         root->key=temp->key;
         root->right=BSTdelete(root->right,temp->key,Parent);
         num_of_nodes--;
-        return temp;
     }
+    return root;
 }
 
 /*          *************           */
@@ -186,6 +187,7 @@ int splay_tree_implementation::get_num_nodes()
     return num_of_nodes;
 }
 
+
 //Moves a node to the root
 Node* splay_tree_implementation::splay(Node *root, int key)  
 {
@@ -195,7 +197,6 @@ Node* splay_tree_implementation::splay(Node *root, int key)
     {
         return root;
     }
-
     //If in case the key lies in the left subtree   
     if (root->key > key)
     {
@@ -238,7 +239,7 @@ Node* splay_tree_implementation::splay(Node *root, int key)
             if (root->right->left != NULL)
             {  
                 root->right = Rotate_Right(root->right);
-            } 
+            }
         }
         else if (root->right->key < key)  
         { 
@@ -303,39 +304,39 @@ void splay_tree_implementation::remove(int key)
 /*          Display Functions       */
 
 //Vector containing the preorder traversal of the splay tree
-vector<int> splay_tree_implementation::pre_orderer(Node* root,vector<int> pre_order)
+vector<int> splay_tree_implementation::pre_orderer(Node* root,vector<int> *pre_order)
 {
     if (root!=NULL)
     {
-        pre_order.push_back(root->key);
+        (*pre_order).push_back(root->key);
         pre_orderer(root->left,pre_order);
         pre_orderer(root->right,pre_order);
     }
-    return pre_order;
+    return (*pre_order);
 }
 
 vector<int> splay_tree_implementation::pre_order()
 {
     vector<int> pre_order;
-    return pre_orderer(root,pre_order);
+    return pre_orderer(root,&pre_order);
 }
 
 //Vector containing the postorder traversal of the splay tree
-vector<int> splay_tree_implementation::post_orderer(Node* root,vector<int> post_order)
+vector<int> splay_tree_implementation::post_orderer(Node* root,vector<int> *post_order)
 {
     if (root!=NULL)
     {
         post_orderer(root->left,post_order);
         post_orderer(root->right,post_order);
-        post_order.push_back(root->key);
+        (*post_order).push_back(root->key);
     }
-    return post_order;
+    return (*post_order);
 }
 
 vector<int> splay_tree_implementation::post_order()
 {
     vector<int> post_order;
-    return post_orderer(root,post_order);
+    return post_orderer(root,&post_order);
 }
 
 //Prints the postorder traversal of the tree
