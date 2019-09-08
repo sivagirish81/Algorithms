@@ -70,8 +70,14 @@ int main()
     
 
     splay_node.print_post_order();
+    cout<<"\n"<<"Deleting 78"<<"\n";
+    splay_node.remove(78);
+    cout<<splay_node.get_num_nodes()<<"\n";
+    splay_node.print_post_order();
+    splay_node.remove(55);
+    cout<<"\n";
+    splay_node.print_post_order();
 
-    
     
     return 0;
     

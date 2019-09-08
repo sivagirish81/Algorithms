@@ -100,6 +100,10 @@ Node* splay_tree_implementation::BSTinsert(Node* root,int key)
 //Returns -1 incase it is not found
 int splay_tree_implementation::FindParent(Node* root,int key)
 {
+    if (root==NULL)
+    {
+        return -1;
+    }
     if (root->key==key || (root->left==NULL && root->right==NULL))
     {
         return -1;
@@ -121,7 +125,6 @@ int splay_tree_implementation::FindParent(Node* root,int key)
 //Finds the inorder successor of the given node
 Node* splay_tree_implementation::getInorderSuccessor(Node* root1)
 {
-    //cout<<"ROOT"<<root1->key<<"\n";
     while (root1 && root1->left)
     {
         root1=root1->left;
@@ -172,7 +175,6 @@ Node* splay_tree_implementation::BSTdelete(Node* root,int key,Node** Parent)
         Node* temp=getInorderSuccessor(root->right);
         root->key=temp->key;
         root->right=BSTdelete(root->right,temp->key,Parent);
-        num_of_nodes--;
     }
     return root;
 }
@@ -209,14 +211,18 @@ Node* splay_tree_implementation::splay(Node *root, int key)
   
         //2 Cases - key can be either to the left of root node or to the right of root node
         //left-left combination
+        //splay the node on the left and right rotate
         if (root->left->key > key)  
         {
             root->left->left = splay(root->left->left, key);
+            //root->left contains the most recently accessed node
             root = Rotate_Right(root);
-        }  
+        }
+        //left-right combination
+        //Splay the node on the right and left rotate
         else if (root->left->key<key)
-        { 
-            root->left->right = splay(root->left->right, key);  
+        {
+            root->left->right = splay(root->left->right, key);
             if (root->left->right != NULL)
             {
                 root->left = Rotate_Left(root->left);
@@ -232,7 +238,10 @@ Node* splay_tree_implementation::splay(Node *root, int key)
         {
             return root;
         } 
-  
+        
+        //2 Cases - key can be either to the left of root node or to the right of root node
+        //Right-left combination
+        //splay the node on the left and right rotate
         if (root->right->key > key)  
         {    
             root->right->left = splay(root->right->left, key);  
@@ -241,6 +250,8 @@ Node* splay_tree_implementation::splay(Node *root, int key)
                 root->right = Rotate_Right(root->right);
             }
         }
+        //right-right combination
+        //Splay the node on the right and left rotate
         else if (root->right->key < key)  
         { 
             root->right->right = splay(root->right->right, key);  
@@ -254,7 +265,13 @@ Node* splay_tree_implementation::splay(Node *root, int key)
 //Otherwise returns 0
 int splay_tree_implementation::find(int key)
 {
+    //Moves the node with key to the root of the tree
     root=splay(root,key);
+    //If in case the node was not found or the tree is empty
+    if (root==NULL)
+    {
+        return 0;
+    }
     return (root->key==key)?1:0;
 }
 
@@ -274,28 +291,24 @@ void splay_tree_implementation::remove(int key)
     {
         return;
     }
-    //Stores a copy of the parent node to be splayed later
     Node* Parent=NULL;
-    root=BSTdelete(root,key,&Parent);
-    int Pkey;
-    //If the node deleted is not a root node
-    if (Parent!=NULL)
+    if (root->key==key)
     {
-        Pkey=Parent->key;
-    }
-    //If node to be deleted is root node do nothing
-    else
-    {
+        root=BSTdelete(root,key,&Parent);
         return;
     }
+    //Stores a copy of the parent node to be splayed later
+    int CPkey=FindParent(root,key);
+    root=BSTdelete(root,key,&Parent);
+    int Pkey;
     //Splay the parent if it exists
-    if (Pkey!=-1)
+    if (CPkey!=-1)
     {
-        root=splay(root,Pkey);
+        root=splay(root,CPkey);
         return;
     }
     //If the node to be deleted was not found at all
-    //Splay the node closest to it
+    //Splay the node closest/last seen node
     root=splay(root,key);
 }
 
