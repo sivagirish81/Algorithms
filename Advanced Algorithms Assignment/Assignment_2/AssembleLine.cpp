@@ -14,6 +14,7 @@ int a[]={7,9,3,4,8,4};
 int b[]={8,5,6,4,5,7};
 int t1[]={2,3,1,3,4};
 int t2[]={2,1,2,2,1};
+int memoize[][]={{-1,-1,-1,-1,-,1-,1},{-1,-1,-1,-1,-1,-1}};
 
 /* Naive Recursion */
 int Order(int n,int l)
@@ -37,6 +38,19 @@ int Order(int n,int l)
 }
 /*	******	*/
 
+/*			Memoization			*/
+
+int Memoize()
+{
+	Memoize[0][0]=e1;
+	Memoize[0][1]=e2;
+	Memoize[6][0]=x1;
+	Memoize[6][1]=x2;
+	for (int i=0;i<n;i++)
+	{
+		
+	}
+}
 
 int Assembly()
 {
@@ -45,5 +59,6 @@ int Assembly()
 
 int main()
 {
-	cout<<Assembly()<<"\n";	
+	cout<<"Naive Recursion "<<Assembly()<<"\n";
+	cout<<"	  Memoization  "<<Memoize()<<"\n";
 }
