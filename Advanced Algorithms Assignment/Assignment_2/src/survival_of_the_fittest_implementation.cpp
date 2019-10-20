@@ -7,7 +7,7 @@ using namespace std;
 class survival_of_the_fittest_implementation : public survival_of_the_fittest
 {
 public:
-    vector<vector<vector<vector<double>>>> DP =vector<vector<vector<vector<double>>>>(100,vector<vector<vector<double>>>(100,vector<vector<double>>(100,vector<double>(3))));
+    vector<vector<vector<vector<double>>>> DP =vector<vector<vector<vector<double>>>>(101,vector<vector<vector<double>>>(101,vector<vector<double>>(101,vector<double>(3))));
     vector<double> solve(int, int, int);
     vector<double> APK(int,int,int);
     //int** NCombinations(int);
@@ -58,7 +58,7 @@ vector<double> survival_of_the_fittest_implementation::APK(int a,int p,int k)
     vector<double> Pprob=APK(a,p,k-1);
     vector<double> Kprob=APK(a-1,p,k);
     DP[a][p][k][0]=( (a*p)*Aprob[0] + (p*k)*Pprob[0] +(k*a)*Kprob[0] ) / (a*p + p*k + k*a );
-    cout << DP[a][p][k][1];
+    //cout << DP[a][p][k][1];
     DP[a][p][k][1]=( (a*p)*Aprob[1] + (p*k)*Pprob[1] +(k*a)*Kprob[1] ) / (a*p + p*k + k*a );
     DP[a][p][k][2]=( (a*p)*Aprob[2] + (p*k)*Pprob[2] +(k*a)*Kprob[2] ) / (a*p + p*k + k*a );
     return DP[a][p][k];
