@@ -17,7 +17,7 @@ int main()
     double range = pow(10, -9);
     survival_of_the_fittest_implementation obj1;
     //clock_gettime(CLOCK_REALTIME, &start_time);
-    vector<double> tmp = obj1.solve(100, 100, 100);
+    vector<double> tmp = obj1.solve(100, 10, 10);
     //clock_gettime(CLOCK_REALTIME, &end_time);
 
     cout << tmp[0] << " " << tmp[1] << " " << tmp[2] << "\n";

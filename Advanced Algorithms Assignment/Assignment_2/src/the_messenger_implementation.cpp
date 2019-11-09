@@ -16,11 +16,12 @@ int the_messenger_implementation::solve(int x,int y,int l,string m)
     int *DP=(int*)malloc(sizeof(int)*(l+1));
     DP[0]=0;
     DP[1]=x;
-    cout<<DP[1];
+    //cout<<DP[1];
     int res=0;
     int temp=0;
     int i=2;
     int k=1;    //No. of Accounted letters
+    /*
     while (i<=l)
     {
         for (int j=1;j<min(k+i,l);j++)
@@ -43,6 +44,19 @@ int the_messenger_implementation::solve(int x,int y,int l,string m)
     {
         cout<<DP[i]<<"\n";
     }
+    */
+   int t;
+   while (i<=l)
+   {
+       t=0;
+       for (int j=k;j<min((2*k),l);j++)
+       {
+           if (m[j]==m[t])
+           {
+               
+           }
+       }
+   }
     return DP[k];
 }
 
