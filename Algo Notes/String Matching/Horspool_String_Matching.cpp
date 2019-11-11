@@ -24,7 +24,7 @@ int HSM(string text,int t,string pat,int p)
     int ST[no_of_chars];
     shift_table(pat,p,ST);
     int j;
-    for (int i=0;i<(t-p);i++)
+    for (int i=0;i<(t-p+1);i++)
     {
         j=p-1;
         while (j>=0 && pat[j]==text[i+j])
