@@ -4,6 +4,7 @@
 using namespace std;
 #include <string>
 
+#define INT_MAX 32676
 class the_messenger_implementation : public the_messenger
 {
 public:
@@ -11,57 +12,65 @@ public:
     //int Rec(int ,int , int , string );
 };
 
-int the_messenger_implementation::solve(int x,int y,int l,string m)
+int the_messenger_implementation::solve(int x,int y,int l,string s)
 {
-    int *DP=(int*)malloc(sizeof(int)*(l+1));
-    DP[0]=0;
-    DP[1]=x;
-    //cout<<DP[1];
-    int res=0;
-    int temp=0;
-    int i=2;
-    int k=1;    //No. of Accounted letters
-    /*
-    while (i<=l)
+    vector<int> DP(l,INT_MAX);
+    vector<int> len(l,0);
+    int i = l-1;
+    int j;
+    int max;
+    while (i-->=1)
     {
-        for (int j=1;j<min(k+i,l);j++)
-            if (m[k]==m[j])
-                k+=1;
-        cout<<"HI"<<"\n";
-        if (k==i)
+        max = 0;
+        j=0;
+        while (j++<i) 
         {
-            DP[i]=DP[i-1]+x;
-            i+=1;
-        }
-        else
+            if (s[j] == s[i]) 
+            {
+                len[j] = len[j+1] + 1;
+                if (j + len[j] > i)
+                {
+                    len[j] = i - j;
+                }
+                if (len[j] > max)
+                {
+                    max = len[j];
+                }
+            }
+            else if (s[j] != s[i])
+            {
+                len[j] = 0;
+            }
+            //j+=1;
+        }  
+        len[i] = max;
+        //i-=1;
+    }
+    int maxlen;
+    int temp;
+    DP[0]=x;
+    i=1;
+    j=0;
+    while ( i++ <l)
+    {
+        DP[i] = DP[i-1] + x;
+        maxlen = len[i];
+        temp = DP[i-1] + y;
+        j=0;
+        while (j++ < maxlen)
         {
-            DP[k]=DP[i-1]+y;
-            i=k;
-            k+=1;
+            if (temp < DP[i+j]) 
+            {
+                DP[i+j] = temp;
+            }
         }
     }
-    for (int i=0;i<l;i++)
-    {
-        cout<<DP[i]<<"\n";
-    }
-    */
-   int t;
-   while (i<=l)
-   {
-       t=0;
-       for (int j=k;j<min((2*k),l);j++)
-       {
-           if (m[j]==m[t])
-           {
-               
-           }
-       }
-   }
-    return DP[k];
+    return DP[l-1];
 }
 
 int main()
 {
     the_messenger_implementation message;
-    cout << message.solve(3,2,4,"pqpq");
+    //cout << message.solve(3,2,11,"AAAAABAAABA");
+    cout << message.solve(3,2,4,"PQPQ");
 }
