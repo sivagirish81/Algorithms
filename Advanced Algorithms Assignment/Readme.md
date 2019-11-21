@@ -1,4 +1,4 @@
-#Advanced Algorithms Assignment 2019
+# Advanced Algorithms Assignment 2019
 
 + Assignment 1 - Amortized Algorithms
 	* Dynamic Array
