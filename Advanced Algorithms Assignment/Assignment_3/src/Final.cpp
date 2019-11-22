@@ -12,19 +12,171 @@ class SuffixArray
         string suffix;
 };
 
+int sorter(SuffixArray A,SuffixArray B)
+{ 
+   int t = A.suffix.compare(B.suffix);
+   if (t < 0)
+   {
+       return 1;
+   }
+   return 0;
+}
+
+//Returns the number of characters that are matched
+int match_count(string a,string b)
+{
+    int size = min(a.size(),b.size());
+    int count;
+    for (count = 0;count < size ; count ++)
+    {
+        if (a[count] != b[count])
+        {
+            break;
+        }
+    }
+    return count;
+}
+
+/*
+void shift_table(string pat,int p,int* ST)
+{
+    for (int i=0;i<no_of_chars;i++)
+    {
+        ST[i]=p;
+    }
+    for (int i=0;i<p-1;i++)
+    {
+        ST[(int)pat[i]]=p-1-i;
+    }
+}
+
+int locate(string text,string pat)
+{
+    int t = text.size();
+    int p = pat.size();
+    int ST[no_of_chars];
+    shift_table(pat,p,ST);
+    int j;
+    for (int i=0;i<(t-p+1);i++)
+    {
+        j=p-1;
+        while (j>=0 && pat[j]==text[i+j])
+        {
+            j--;
+        }
+        if (j<0)
+        {
+            return i;
+            i+=(i+p<t)?ST[text[i+p]]:1;
+        }
+        else
+        {
+            i+=max(1,j-ST[text[i+j]]);
+        }
+    }
+    return 0;
+}
+*/
+
+int locate(string text,string pat)
+{
+    int t = text.size();
+    int p = pat.size();
+    //int j;
+    if (t<p)
+    {
+        return -1;
+    }
+    int count = 0;
+    for (int i=0;i<(t-p+1);i++)
+    {
+        count = 0;
+        for (int j =0;j<p;j++)
+        {
+            if (text[i+j] != pat[j])
+            {
+                break;
+            }
+            //cout << text[i+j] << " " << pat[j] << endl;
+            count++;
+        }
+        if (count == p)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
 string Longest_Common_Substring(string document,string query)
 {
+    //cout << "HI" << endl;
     int dlen = document.size();
     int qlen = query.size();
     int tlen = dlen + qlen;
     string combo = document + query;
+    //cout << "COMBO :" << endl << combo << endl;
     SuffixArray Suff[tlen];
     for (int i =0 ;i < tlen ; i++ )
     {
         Suff[i].pos = i;
         Suff[i].suffix = combo.substr(i);
-    } 
+    }
+    sort(Suff, Suff+tlen, sorter);
+    int mlps = 0;
+    int mindex = -1;
+    int clen = 0;
+    int flag = 0;
+    for (int i =0;i<(tlen -1);i++)
+    {
+        if ((Suff[i].pos < dlen) && (Suff[i+1].pos <dlen))
+        {
+            flag++;
+        }
+        else if ((Suff[i].pos >= dlen) && (Suff[i+1].pos >= dlen))
+        {
+            flag++;
+        }
+        else
+        {
+            clen = match_count(Suff[i].suffix,Suff[i+1].suffix);
+            if (clen > mlps)
+            {
+                mlps = clen;
+                mindex = i;
+            }
+        }
+    }
+    if (mindex == -1) 
+    {
+        return " ";
+    }
+    else
+    {
+        return Suff[mindex].suffix;
+    }
 }
+
+void print_results(vector<string> documents,string query)
+{
+    string text;
+    int res;
+    vector<pair<int,int>> docpos;
+    for (int i =0;i<documents.size();i++)
+    {
+        text = documents[i];
+        res = locate(text,query);
+        if (res!=-1)
+            docpos.push_back(make_pair(i,res));
+    }
+    cout << query << endl;
+    for (auto i : docpos)
+    {
+        cout << i.first << " " << i.second <<endl;
+    }
+}
+
 void LM(vector<string> documents,string query)
 {
     string pres;
@@ -58,59 +210,6 @@ void LM(vector<string> documents,string query)
     }
 }
 
-void shift_table(string pat,int p,int* ST)
-{
-    for (int i=0;i<no_of_chars;i++)
-    {
-        ST[i]=p;
-    }
-    for (int i=0;i<p-1;i++)
-    {
-        ST[(int)pat[i]]=p-1-i;
-    }
-}
-
-int locate(string text,string pat)
-{
-    int t = text.size();
-    int p = pat.size();
-    int ST[no_of_chars];
-    shift_table(pat,p,ST);
-    int j;
-    for (int i=0;i<(t-p+1);i++)
-    {
-        j=p-1;
-        while (j>=0 && pat[j]==text[i+j])
-        {
-            j--;
-        }
-        if (j<0)
-        {
-            return i;
-            //i+=(i+p<t)?ST[text[i+p]]:1;
-        }
-        else
-        {
-            i+=max(1,j-ST[text[i+j]]);
-        }
-    }
-    return 0;
-}
-
-//Returns the number of characters that are matched
-int match_count(string a,string n)
-{
-    int size = min(a.size(),b.size());
-    for (int count = 0;count < size ; count ++)
-    {
-        if (a[count] != b[count])
-        {
-            break;
-        }
-    }
-    return count;
-}
-
 int Matcher(vector<string> documents,vector<string> queries)
 {
     int Num_Of_Docs = documents.size();
@@ -120,21 +219,24 @@ int Matcher(vector<string> documents,vector<string> queries)
     int pos;
 
     //If there is a full match then no need of constructing Suffix Array
-    while (i < Num_Of_Queries)
+    while (i < Num_OF_Queries)
     {
         pres = 0;
         pos = 0;
         while (j < Num_Of_Docs)
         {
             pos = locate(documents[j],queries[i]);
-            pres = (pos > 0)>1:0;
+            pres = (pos >= 0)?1:0;
             if (pres)
                 break;
             j++;
         }
         //If in case there is no full match then print the longest match
         //Otherwise print the results
-        (pres == 0)?LM(documents,queries[i]):Print_results(documents,queries[i]);
+        if (pres == 0)
+            LM(documents,queries[i]);
+        else
+            print_results(documents,queries[i]);
         i+=1;
     }
 }

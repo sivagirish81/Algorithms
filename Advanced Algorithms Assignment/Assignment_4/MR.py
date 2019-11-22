@@ -1,4 +1,11 @@
+import matplotlib.pyplot as plt
 import random
+
+def GenerateGraphs():
+    test = []
+    for i in range(1000):
+        test.append(ISPrime(i,i))
+    for j i
 
 def Miller(d,n,r):
     a = random.randint(2,n-2)           #Generate Random number in range 2 to n-2
