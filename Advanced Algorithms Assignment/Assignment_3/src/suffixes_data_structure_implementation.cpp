@@ -62,7 +62,10 @@ suffixes_data_structure_implementation::suffixes_data_structure_implementation()
 
 search_results suffixes_data_structure_implementation::search(string query)
 {
-    cout << "t";
+    //cout << "t";
+    int res = descend(root,query,0);
+    if (res!=1)
+        return 
 }
 
 //Preprocessing Done
@@ -86,6 +89,7 @@ string suffixes_data_structure_implementation::preprocess(vector<string> input)
 }
 
 /*Global Variables*/
+string query;               //Query String
 int remSuffixes = 0;        //Number of suffixes left to be added to the tree
 int leaf = -1;              //For handling the insertion of a new leaf node.
 int *root_end = NULL;       //End Of Root
@@ -122,7 +126,6 @@ int suffixes_data_structure_implementation::descend(Node* node)
 
 void suffixes_data_structure_implementation::build(vector<string> input)
 {
-    string query;
     //Preprocess the text
     //Replace all spaces with #
     //Denote end of string by $
@@ -209,7 +212,14 @@ void suffixes_data_structure_implementation::build(vector<string> input)
     root -> fill++;
     dfs(root,Label);
 }
-
+/*
+search_results suffixes_data_structure_implementation::search(string query)
+{
+    int res = descend(root,query,0);
+    if (res!=1)
+        return 
+}
+*/
 suffixes_data_structure_implementation::~suffixes_data_structure_implementation()
 {
     cout << "BYE";

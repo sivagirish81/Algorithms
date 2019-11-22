@@ -46,13 +46,6 @@ int the_messenger_implementation::solve(int x,int y,int l,string s)
         len[i] = max;
         i-=1;
     }
-    /*
-    for (int i=0;i<len.size();i++)
-    {
-        cout << len[i] << " ";
-    }
-    */
-    //cout << endl;
     int maxlen;
     int temp;
     DP[0]=x;
@@ -67,12 +60,13 @@ int the_messenger_implementation::solve(int x,int y,int l,string s)
         maxlen = len[i];
         temp = DP[i-1] + y;
         j=0;
-        while (j++ < maxlen)
+        while (j < maxlen)
         {
             if (temp < DP[i+j]) 
             {
                 DP[i+j] = temp;
             }
+            j+=1;
         }
         i+=1;
     }
@@ -83,5 +77,5 @@ int main()
 {
     the_messenger_implementation message;
     //cout << message.solve(3,2,11,"AAAAABAAABA");
-    cout << message.solve(3,2,4,"PQPQ");
+    cout << message.solve(3,1,4,"QQQQ");
 }
