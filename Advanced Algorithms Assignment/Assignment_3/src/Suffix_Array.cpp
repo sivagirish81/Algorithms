@@ -105,29 +105,30 @@ int main()
     }
     int q;
     cin >> q;
-    vector<string> queries;
     string query;
-    for (int i =0;i<q;i++)
-    {
-        cin >> query;
-        queries.push_back(query);
-    }
     int j =0;
     int k;
+    for (int i =0 ;i <SuffixArrays[0].size();i++)
+    {
+        cout << SuffixArrays[0][i] << endl;
+    }
+    /*
     vector<vector<int>> res;
     while (q--)
     {
+        cin >> query;
         res.clear();
         for (int i = 0;i<SuffixArrays.size();i++)                           //For each document
         {
-            k = search(SuffixArrays[i],queries[j],documents[i]);            //Search
+            k = search(SuffixArrays[i],query,documents[i]);            //Search
             if (k == -1)
             {
-                k = Partial_match(SuffixArrays[i],queries[j],documents[i]); //Partial Search
+                k = Partial_match(SuffixArrays[i],query,documents[i]); //Partial Search
             }
             res.push_back({i,k});                                              //Push Document number and index
         }
         display_results(res);
         j++;
     }
+    */
 }
