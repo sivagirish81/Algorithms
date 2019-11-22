@@ -15,7 +15,7 @@ public:
 int the_messenger_implementation::solve(int x,int y,int l,string s)
 {
     vector<int> DP(l,INT_MAX);
-    vector<int> len(l,0);
+    vector<int> state(l,0);
     int i = l-1;
     int j;
     int max;
@@ -27,46 +27,46 @@ int the_messenger_implementation::solve(int x,int y,int l,string s)
         {
             if (s[j] == s[i]) 
             {
-                len[j] = len[j+1] + 1;
-                if (j + len[j] > i)
+                state[j] = state[j+1] + 1;
+                if (j + state[j] - i> 0)      
                 {
-                    len[j] = i - j;
+                    state[j] = i - j;
                 }
-                if (len[j] > max)
+                if (state[j] > max)
                 {
-                    max = len[j];
+                    max = state[j];
                 }
             }
             else if (s[j] != s[i])
             {
-                len[j] = 0;
+                state[j] = 0;
             }
             j+=1;
         }  
-        len[i] = max;
+        state[i] = max;
         i-=1;
     }
-    int maxlen;
+    int maxim;
     int temp;
     DP[0]=x;
     i=1;
     j=0;
     while (i <l)
     {
-        if (DP[i] > DP[i-1] + x)
+        if (DP[i] - DP[i-1] > x)
         {
             DP[i] = DP[i-1] + x;
         }
-        maxlen = len[i];
+        maxim = state[i];
         temp = DP[i-1] + y;
         j=0;
-        while (j < maxlen)
+        while (j < maxim)
         {
             if (temp < DP[i+j]) 
             {
                 DP[i+j] = temp;
             }
-            j+=1;
+            j++;
         }
         i+=1;
     }
