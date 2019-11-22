@@ -5,6 +5,7 @@
 using namespace std;
 #define no_of_chars 256
 
+//Suffix Array pos is index of suffix and suffix is the actual suffix string
 class SuffixArray
 {
     public:
@@ -12,6 +13,7 @@ class SuffixArray
         string suffix;
 };
 
+//Helper function to sort the suffixes in suffix array creation
 int sorter(SuffixArray A,SuffixArray B)
 { 
    int t = A.suffix.compare(B.suffix);
@@ -26,7 +28,6 @@ int sorter(SuffixArray A,SuffixArray B)
 int match_count(string a,string b)
 {
     int size = min(a.size(),b.size());
-    //cout << size << endl;
     int count;
     for (count = 0;count < size ; count ++)
     {
@@ -38,20 +39,22 @@ int match_count(string a,string b)
     return count;
 }
 
+//Locates the position of the string pat in a string text
 int locate(string text,string pat)
 {
     int t = text.size();
     int p = pat.size();
-    //int j;
     if (t<p)
     {
         return -1;
     }
     int count = 0;
+    int j;
     for (int i=0;i<(t-p+1);i++)
     {
         count = 0;
-        for (int j =0;j<p;j++)
+        j=0;
+        while (j<p)
         {
             if (text[i+j] != pat[j])
             {
@@ -59,6 +62,7 @@ int locate(string text,string pat)
             }
             //cout << text[i+j] << " " << pat[j] << endl;
             count++;
+            j++;
         }
         if (count == p)
         {
@@ -71,42 +75,41 @@ int locate(string text,string pat)
 
 string Longest_Common_Substring(string document,string query)
 {
-    //cout << "HI" << endl;
     int dlen = document.size();
     int qlen = query.size();
-    int tlen = dlen + qlen;
+    int tlen = dlen + qlen;             //Document + Query Length
     string combo = document + query;
     //cout << "COMBO :" << endl << combo << endl;
     SuffixArray Suff[tlen];
     for (int i =0 ;i < tlen ; i++ )
     {
-        Suff[i].pos = i;
-        Suff[i].suffix = combo.substr(i);
+        Suff[i].pos = i;                                //Assigning index of  suffix
+        Suff[i].suffix = combo.substr(i);               //Assigning the coresponding substring
     }
-    sort(Suff, Suff+tlen, sorter);
-    int mlps = 0;
+    sort(Suff, Suff+tlen, sorter);                      //Sorting according to suffixes
+    int mlps = 0;                                       
     int mindex = -1;
     int clen = 0;
     int flag = 0;
     for (int i =0;i<(tlen -1);i++)
     {
-        if ((Suff[i].pos < dlen) && (Suff[i+1].pos <dlen))
+        if ((Suff[i].pos < dlen) && (Suff[i+1].pos <dlen))          //Both the suffixes belong to the document itself
         {
             flag++;
             continue;
         }
-        else if ((Suff[i].pos >= dlen) && (Suff[i+1].pos >= dlen))
+        else if ((Suff[i].pos >= dlen) && (Suff[i+1].pos >= dlen))      //Both the suffixes belong to the query string
         {
             flag++;
             continue;
         }
         else
         {
-            clen = match_count(Suff[i].suffix,Suff[i+1].suffix);
-            if (clen > mlps)
+            clen = match_count(Suff[i].suffix,Suff[i+1].suffix);    //Find the length of the match
+            if (clen > mlps)                                        
             {
-                mlps = clen;
-                mindex = i;
+                mlps = clen;                                        //Find the largest value for the match
+                mindex = i;                                         //Corresponding index
             }
         }
     }
@@ -115,9 +118,12 @@ string Longest_Common_Substring(string document,string query)
         return "";
     }
     //cout << Suff[mindex].suffix;
-    return Suff[mindex].suffix.substr(0,mlps);
+    //Partial match case
+    return Suff[mindex].suffix.substr(0,mlps);                      //The longest substring match 
 }
 
+//prints the results whenever a Full match occurs
+//Full string match
 void print_results(vector<string> documents,string query)
 {
     string text;
@@ -137,6 +143,8 @@ void print_results(vector<string> documents,string query)
     }
 }
 
+//Longest Match
+//Partial Matching
 void LM(vector<string> documents,string query)
 {
     string pres;
@@ -148,6 +156,7 @@ void LM(vector<string> documents,string query)
     int i =0;
     while (i < num_of_docs)
     {
+        //Find the longest common substring
         pres = Longest_Common_Substring(documents[i],query);
         if (maxlength < pres.size())
         {
@@ -158,18 +167,22 @@ void LM(vector<string> documents,string query)
         i+=1;
     }
 
+    //If there exists a document with a partial match
+    //Print the specifics of the partial match
     if (dindex != -1)
     {
         int index = locate(documents[dindex],longest);
         cout << longest << endl;
-        cout << dindex << " " << index;
+        cout << dindex << " " << index << endl;
     }
+    //If ther is no partial match as well then print -1
     else
     {
         cout << -1 << endl;
     }
 }
 
+//Decider Function - Decides whether to construct a suffix array for a document or not
 int Matcher(vector<string> documents,vector<string> queries)
 {
     int Num_Of_Docs = documents.size();
