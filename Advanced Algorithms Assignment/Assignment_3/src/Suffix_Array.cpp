@@ -11,23 +11,8 @@ class SuffixArray
 {
     public:
         int pos;
-        int doc_num;
         string suffix;
 };
-
-string preprocess(vector<string> input)
-{
-    string query;
-    if (input.size() == 1)
-    {
-        return input[0];
-    }
-    for (int i =0;i<input.size();i++)
-    {
-        query+=input[i];
-    }
-    return query;
-}
 
 int sorter(SuffixArray A,SuffixArray B)
 { 
@@ -39,28 +24,14 @@ int sorter(SuffixArray A,SuffixArray B)
    return 0;
 }
 
-vector<int> build_suffix_array(vector<string> documents)
+vector<int> build_suffix_array(string text)
 {
-    string text = preprocess(documents);
-    vector<int> docer(documents.size(),0);
-    for (int i =0 ;i < documents.size();i++)
-    {
-        docer.push_back(accumulate(docer.begin(), docer.end(), 0)+documents[i].size());
-    }
-    int docc =0 ;
     int len = text.size();
     SuffixArray suff[len];  
     int i=0;
-    int docno =0;
     while (i < len)
     {
-        if (i == docer[docc])
-        {
-            docno+=1;
-            docc+=1;
-        }
-        suff[i].pos = i;
-        suff[i].doc_num = docno; 
+        suff[i].pos = i; 
         suff[i].suffix = text.substr(i);
         i++;
     }
@@ -75,44 +46,47 @@ vector<int> build_suffix_array(vector<string> documents)
     return suffixArr; 
 }
 
-vector<int>::iterator search(vector<int> arr,string pat,string Text)
+int search(vector<int> arr,string pat,string Text)
 {
-    /*
     int m =pat.size();
     int start = 0;
-    //string Text = preprocess(documents);
     int end = Text.size() -1;
-    //cout << end;
     int mid;
     int res;
-    */
-    /*
     while (start <= end)
     {
         mid = start + (end-1)/2;
-        //cout << "Mid = " <<mid << endl;
         res = pat.compare(Text.substr(arr[mid],m));
-        //cout << "RES =" <<res;
         if (res == 0)
         {
-            cout << arr[mid];
-            return;
+            return arr[mid];
         }
         if (res < 0)
         {
-            end = mid -1;
-            //cout <<"End= "<<end<<endl;
+            end = mid -1;;
         }
         else
         {
             start = mid+1;
-            //cout <<"Start= "<<start<<endl;
         }
     }
-    */
-    //cout << -1;
-    return lower_bound(Text.begin(),Text.end(),pat);
+    return -1;
 }
+
+int Partial_match(vector<int> arr,string pat,string Text)
+{
+    return -1;
+}
+
+void display_results(vector<vector<int>> res)
+{
+    for (int i = 0;i<res.size();i++)
+    {
+        cout << res[i][0] << " " << res[i][1];
+        cout << endl;
+    }
+}
+
 int main()
 {
     int N;              //Number of Docs
@@ -129,35 +103,31 @@ int main()
     {
         SuffixArrays.push_back(build_suffix_array(documents[i]));
     }
-    //vector<int> arr = build_suffix_array(documents);
     int q;
     cin >> q;
     vector<string> queries;
     string query;
-    /*
-    for (int i =0;i<arr.size();i++)
-    {
-        cout << arr[i] <<" ";
-    }
-    cout << endl;
-    */
     for (int i =0;i<q;i++)
     {
         cin >> query;
         queries.push_back(query);
     }
     int j =0;
-    vector<int>::iterator k;
+    int k;
+    vector<vector<int>> res;
     while (q--)
     {
-        for (int i = 0;i<SuffixArrays.size();i++)
+        res.clear();
+        for (int i = 0;i<SuffixArrays.size();i++)                           //For each document
         {
-            k = search(SuffixArrays[i],queries[j],documents[i]);
-            if (k -  )
+            k = search(SuffixArrays[i],queries[j],documents[i]);            //Search
+            if (k == -1)
             {
-                
+                k = Partial_match(SuffixArrays[i],queries[j],documents[i]); //Partial Search
             }
+            res.push_back({i,k});                                              //Push Document number and index
         }
+        display_results(res);
         j++;
     }
 }
