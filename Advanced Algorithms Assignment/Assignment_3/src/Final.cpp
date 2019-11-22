@@ -26,6 +26,7 @@ int sorter(SuffixArray A,SuffixArray B)
 int match_count(string a,string b)
 {
     int size = min(a.size(),b.size());
+    //cout << size << endl;
     int count;
     for (count = 0;count < size ; count ++)
     {
@@ -36,47 +37,6 @@ int match_count(string a,string b)
     }
     return count;
 }
-
-/*
-void shift_table(string pat,int p,int* ST)
-{
-    for (int i=0;i<no_of_chars;i++)
-    {
-        ST[i]=p;
-    }
-    for (int i=0;i<p-1;i++)
-    {
-        ST[(int)pat[i]]=p-1-i;
-    }
-}
-
-int locate(string text,string pat)
-{
-    int t = text.size();
-    int p = pat.size();
-    int ST[no_of_chars];
-    shift_table(pat,p,ST);
-    int j;
-    for (int i=0;i<(t-p+1);i++)
-    {
-        j=p-1;
-        while (j>=0 && pat[j]==text[i+j])
-        {
-            j--;
-        }
-        if (j<0)
-        {
-            return i;
-            i+=(i+p<t)?ST[text[i+p]]:1;
-        }
-        else
-        {
-            i+=max(1,j-ST[text[i+j]]);
-        }
-    }
-    return 0;
-}
-*/
 
 int locate(string text,string pat)
 {
@@ -133,10 +93,12 @@ string Longest_Common_Substring(string document,string query)
         if ((Suff[i].pos < dlen) && (Suff[i+1].pos <dlen))
         {
             flag++;
+            continue;
         }
         else if ((Suff[i].pos >= dlen) && (Suff[i+1].pos >= dlen))
         {
             flag++;
+            continue;
         }
         else
         {
@@ -150,12 +112,10 @@ string Longest_Common_Substring(string document,string query)
     }
     if (mindex == -1) 
     {
-        return " ";
+        return "";
     }
-    else
-    {
-        return Suff[mindex].suffix;
-    }
+    //cout << Suff[mindex].suffix;
+    return Suff[mindex].suffix.substr(0,mlps);
 }
 
 void print_results(vector<string> documents,string query)
@@ -198,11 +158,11 @@ void LM(vector<string> documents,string query)
         i+=1;
     }
 
-    if (dindex < 0)
+    if (dindex != -1)
     {
         int index = locate(documents[dindex],longest);
         cout << longest << endl;
-        cout << dindex << index;
+        cout << dindex << " " << index;
     }
     else
     {
@@ -227,7 +187,7 @@ int Matcher(vector<string> documents,vector<string> queries)
         {
             pos = locate(documents[j],queries[i]);
             pres = (pos >= 0)?1:0;
-            if (pres)
+            if (pos >= 0)
                 break;
             j++;
         }
