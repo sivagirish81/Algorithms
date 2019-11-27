@@ -1,11 +1,11 @@
-#include "../include/the_messenger.hpp"
+
 #include <vector>
 #include <iostream>
 using namespace std;
 #include <string>
 
 #define INT_MAX 32676
-class the_messenger_implementation : public the_messenger
+class the_messenger_implementation
 {
 public:
     int solve(int, int, int, string);
@@ -67,7 +67,7 @@ int the_messenger_implementation::solve(int x,int y,int l,string s)
     j=0;
     while (i <l)
     {
-        // If the difference between inserting the new element and the cost for the insertion of previous charactrs i more than x
+        // If the difference between inserting the new element and the cost for the insertion of previous charactrs i more tan x
         // Add the new cost = x 
         if (DP[i] - DP[i-1] > x)
         {
@@ -96,5 +96,10 @@ int the_messenger_implementation::solve(int x,int y,int l,string s)
 int main()
 {
     the_messenger_implementation message;
-    cout << message.solve(3,2,4,"QQQQ");
+    int x;
+    int y;
+    int l;
+    string m;
+    cin >> x >> y >> l >> m;
+    cout << message.solve(x,y,l,m);
 }
