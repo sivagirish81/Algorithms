@@ -96,12 +96,10 @@ string Longest_Common_Substring(string document,string query)
         if ((Suff[i].pos < dlen) && (Suff[i+1].pos <dlen))          //Both the suffixes belong to the document itself
         {
             flag++;
-            continue;
         }
         else if ((Suff[i].pos >= dlen) && (Suff[i+1].pos >= dlen))      //Both the suffixes belong to the query string
         {
             flag++;
-            continue;
         }
         else
         {
@@ -133,6 +131,7 @@ void print_results(vector<string> documents,string query)
     {
         text = documents[i];
         res = locate(text,query);
+        // Document number and position
         if (res!=-1)
             docpos.push_back(make_pair(i,res));
     }
