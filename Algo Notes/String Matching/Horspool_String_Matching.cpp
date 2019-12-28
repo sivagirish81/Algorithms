@@ -47,15 +47,15 @@ int HSM(string text,int t,string pat,int p)
 
 # define NO_OF_CHARS 256  
 
-void badCharHeuristic( string str, int size,  
-                        int badchar[NO_OF_CHARS])  
+void badCharHeuristic( string str, int size,int badchar[NO_OF_CHARS])  
 {  
     int i;   
     for (i = 0; i < NO_OF_CHARS; i++)  
         badchar[i] = -1;  
     for (i = 0; i < size; i++)  
         badchar[(int) str[i]] = i;  
-}  
+}
+
 void search( string txt, string pat)  
 {  
     int m = pat.size();  

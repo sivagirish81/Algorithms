@@ -8,7 +8,7 @@ int Left_Diagonal[N_MAX] = {0};      // To Keep Track Of Queen movements along l
 int Right_Diagonal[N_MAX] = {0};     // To Keep Track Of Queen movements along right diagonal
 int Column[N_MAX] = {0};             // To Keep Track Of Queen movements along corresponding column
 
-bool Solve_NQueens_Helper(int *Board,int col,int N)
+bool Solve_NQueens_Helper(int Board[N_MAX][N_MAX],int col,int N)
 {
     if (col >= N)              // If all N Queens are placed on the chessboard then return successful
         return true;
@@ -18,7 +18,7 @@ bool Solve_NQueens_Helper(int *Board,int col,int N)
     {
         if (Left_Diagonal[i - col + N - 1]!= 1 && Right_Diagonal[i + col]!=1 && Column[i]!=1)
         {
-            *Board[i][col] = 1;                      // Assuming Board[i][col] to be a correct Position We place a queen in that position
+            Board[i][col] = 1;                      // Assuming Board[i][col] to be a correct Position We place a queen in that position
             Left_Diagonal[i - col + N - 1] = 1;     // To make sure that we cannot place further queens in these corresponding positions
             Right_Diagonal[i + col] = 1;            // We assign all elements along the left and right diagonal to 1
             Column[i] = 1;                          // As well as the same column to 1
@@ -41,14 +41,18 @@ bool Solve_NQueens_Helper(int *Board,int col,int N)
 // Print the Board Configuration
 // Wherre N Queens placed on the Chess Board
 // Cannot attack Each other
-void Print_Solution(int N,int Board[][N])
+void Print_Solution(int N,int Board[N_MAX][N_MAX])
 {
+    cout << "[";
     for (int i = 0;i < N;i++)
     {
         for (int j = 0;j < N;j++)
-            cout << Board[i][j] << " ";
-        cout << endl;
+            if (Board[i][j] == 1 && (i != N-1))
+                cout << j <<" ";
+            else if (Board[i][j] == 1)
+                cout << j ;
     }
+    cout << "]" <<endl;
 }
 
 // Create A Board Array
@@ -56,13 +60,14 @@ void Print_Solution(int N,int Board[][N])
 // Print the corresponding solution if it exists
 void Solve_NQueens(int N)
 {
-    int Board[N][N];
+    int Board[N_MAX][N_MAX];
     for (int i = 0;i < N;i++)
         for (int j = 0;j < N;j++)
             Board[i][j] = 0;
     if (Solve_NQueens_Helper(Board,0,N) == false)
     {
-        cout << "Solution Does Not Exist" << endl;
+        // cout << "Solution Does Not Exist" << endl;
+        cout << -1 << endl;
         return;
     }
     Print_Solution(N,Board);
