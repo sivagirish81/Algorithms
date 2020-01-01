@@ -2,9 +2,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int No_Of_Ways(int M,int N)
+long long No_Of_Ways(int M,int N)
 {
-    int DP[M+1][N+1];
+    long long DP[M+1][N+1];
     for (int i = 0;i < M;i++)
     {
         DP[i][0] = 1;
@@ -17,10 +17,10 @@ int No_Of_Ways(int M,int N)
     {
         for (int j = 1;j < N;j++)
         {
-            DP[i][j] = DP[i-1][j] + DP[i][j-1];
+            DP[i][j] = (DP[i-1][j]%((long long)pow(10,9) + 7)) + (DP[i][j-1]%((long long)pow(10,9) + 7));
         }
     }
-    return DP[M -1][N -1];
+    return DP[M - 1][N - 1]%((long long)pow(10,9) + 7);
 }
 
 int main() {

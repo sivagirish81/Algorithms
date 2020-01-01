@@ -35,7 +35,7 @@ void Guess_num(long long A,long long M)
         {
             k = temp/A;
             if (k%d[i] == 0)
-                N.push_back(int(temp/A));
+                N.push_back((long long)(temp/A));
         }
     }
     cout << N.size() << endl;
