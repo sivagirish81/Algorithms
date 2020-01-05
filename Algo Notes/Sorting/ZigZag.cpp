@@ -17,7 +17,7 @@ void ZigZag(int N)
     bool flag = true;
     for (int j = 0;j <= N - 2;j++)
     {
-        cout << A[j] << " " << A[j+1] << endl;
+        // cout << A[j] << " " << A[j+1] << endl;
         if (flag)
         {
             if (A[j] > A[j+1])
