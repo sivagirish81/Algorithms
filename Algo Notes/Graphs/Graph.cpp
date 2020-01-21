@@ -121,3 +121,40 @@ bool isCyclic(vector<int> adj[], int V)
    }
     return false;
 }
+
+// Find the minimum number of swaps required to sort an array
+
+int minSwaps(int A[], int N){
+    /*Your code here */
+    pair <int,int> Sarr[N];
+    
+    for (int i = 0;i < N;i++)
+    {
+        Sarr[i].first = A[i];
+        Sarr[i].second = i;   
+    }
+    sort(Sarr,Sarr + N);
+    
+    bool vis[N];
+    memset(vis,false,sizeof(vis));
+    
+    int j;
+    int cycleSz;
+    int swaps = 0;
+    for (int i = 0;i < N;i++)
+    {
+        if (vis[i] || Sarr[i].second == i)
+            continue;
+        cycleSz = 0;
+        j = i;
+        while (!vis[j])
+        {
+            vis[j] = true;
+            j = Sarr[j].second;
+            cycleSz++;
+        }
+        if (cycleSz >= 1)
+            swaps+= (cycleSz - 1);
+    }
+    return swaps;
+}
