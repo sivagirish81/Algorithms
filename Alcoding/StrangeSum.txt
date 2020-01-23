@@ -1,0 +1,53 @@
+Problem Statement:
+
+Given an integer array having n elements ,for each element all the elements present at index less than the index of the present element which are smaller than the present element are added to the SUM array S . Calculate the sum of all the elements of the sum array S.
+
+
+
+Input
+
+First line contains number of test cases T
+
+Every test case two lines,
+
+First line of each testcase representing the number of elements in the array
+
+Second line the elements of the array
+
+
+
+Output
+
+For each test case print the sum of all the elements of the SUM array S.
+
+
+
+Constraints
+
+1<=T<=30
+1<=N<=105
+1<= Ai <= 105
+
+Sample Input:
+2
+5
+2 6 4 7 5
+5
+1 2 3 4 5
+
+Sample Output:
+22
+20
+
+Sample Explaination:
+Case 1:-
+
+S = {2,2,2,6,4,2,4}
+
+Sum = 22
+
+Case 2:-
+
+S = {1,1,2,1,2,3,1,2,3,4}
+
+Sum = 20

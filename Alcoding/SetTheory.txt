@@ -1,0 +1,35 @@
+Problem Statement:
+
+Dylan likes to learn new concepts and solve problems related to them. Recently, he learnt about set theory and solved a question he thinks is interesting. However, he does not know if his answers are correct and wants you to solve it so that he can verify his answers. The question is as follows.
+You are given a list of N positive integers such that each integer is present either once or twice in the list. Find the number of ways to create different pairs of sets A and B using all the numbers in the list such that the cardinality of the set "A intersection B" (A  B) is equal to X. Since the answer can be really big, print the answer modulo 109+7.
+
+Note:
+
+A set here is defined as a collection of distinct positive integers. Therefore you cannot create a set with two equal integers in it.
+Intersection of two sets is defined as a set that contains elements common to both the sets.
+Cardinality of a set is defined as the number of elements it contains.
+Two pairs of sets (A, B) and (A', B') are said to be same only if A = A' and B = B'
+
+Input format:
+The first line contains two numbers N and X.
+The second line contains N integers A1, A2, ...., An denoting the numbers in the list.
+
+Output format:
+Print a single integer denoting the number of ways (modulo 109 + 7) to create pairs of sets A and B such that the cardinality of A  B is X.
+
+Constraints:
+1 <= N <= 107
+1 <= X,Ai <= 109
+
+Sample Input:
+5 2
+1 1 2 2 3
+
+Sample Output:
+2
+
+Sample Explaination:
+The different pairs of sets whoose intersection is equal to 2 are (({1,2,3},{1,2}) and ({1,2},{1,2,3})
+Hence, the answer is 2.
+
+

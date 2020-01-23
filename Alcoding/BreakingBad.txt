@@ -1,0 +1,51 @@
+Problem Statement:
+
+Bradman is given a string of only lower-case characters by his friend. His task is to make the string as small as possible by removing only the word “bad” from the string.
+
+Bradman can remove all subsequences which form the word “bad”. For example in “abaaabqd” he can remove the character "b" at index 1, "a" at index 2 and "d" at index 7 to form the new string “aaabq” which is the minimum length of the string possible after removing the word bad.
+
+Help Bradman find the smallest attainable string and print the length of the smallest string as the output.
+
+
+
+Input:
+
+The first line contains a single integer X, denoting the number of strings.
+
+For each of the X strings, there are 2 lines of input. The first line contains the length of the string. The second line contains the string
+
+Output:
+
+For each string print the length of the smallest attainable string.
+
+Constraints:
+
+1 <= X <= 10
+
+1 <= Length of string <= 100
+
+
+Sample Input:
+
+3
+12
+badbaadbaaad
+9
+dabcdafeb
+7
+bdbaadd
+
+Sample Output:
+3
+9
+1
+
+Sample Explaination:
+badbaadbaaad : The smallest string attained is "aaa"
+
+dabcdafeb : Nothing can be deleted. Hence smallest string attained is "dabcdafeb"
+
+bdbaadd : The smallest string attained is "d"
+
+
+

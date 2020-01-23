@@ -1,0 +1,55 @@
+Problem Statement:
+
+Ann gives Mary a chessboard state with 1 king, 1 bishop and at most 8 pawns. These pieces are placed randomly in the chessboard. Help Mary determine if the bishop can Attack (“Check”) the king by moving the bishop multiple times without being blocked by the pawns.
+
+NOTE:
+
+The bishop can move only in diagonal fashion. The bishop can be blocked by the pawns in the chessboard. 0<=Number of pawns<=8. The top left tile on the chessboard is white.
+
+Input:
+
+First line contains the number of chessboard states, “x”
+
+For each of the “x” chessboard states there are 9 lines of input. First line contains the number of pawns present. The next 8 lines is an 8*8 matrix depicting the chessboard state.
+
+“P” represents Pawn
+
+“K” represents King
+
+“B” represents Bishop
+
+“0” represents empty tile
+
+Output:
+
+For each chessboard state print “YES” if the bishop can attack the king else print “NO”
+
+Constraints:
+
+1<=x<=10
+
+
+Sample Input:
+2
+3
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 B 0 0
+0 0 P 0 P 0 0 0
+0 0 0 0 0 P 0 0
+0 0 0 0 K 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+5
+0 0 0 P 0 0 0 B
+0 0 0 0 P 0 0 0
+0 0 0 0 0 P 0 0
+0 0 0 0 0 0 P 0
+0 0 0 K 0 0 0 P
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+Sample Output:
+YES
+NO

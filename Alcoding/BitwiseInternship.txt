@@ -1,0 +1,39 @@
+Problem Statement:
+
+Dylan recently got an internship at a reputed company called Bitwise. His first task was to implement a function that was given to him in pseudocode. The pseudocode is as follows
+
+function solve(a,b)
+    mod = 1000000007
+    res = a
+    xor = a
+    or = a
+    for i from a+1 to b
+        xor = xor^i
+        or = or|i
+        res = res + or
+    return (res+xor)%mod
+
+Here ^ and | stand for the bitwise XOR and OR operations respectively.
+However, after seeing the pseudocode, Dylan realized the end result can be calculated much more efficiently and wants your help to find it. Help Dylan by calculating the output of the function.
+
+Input format:
+The first line contains a single integer T denoting the number of test cases.
+The first and the only line of each test case contains two integers a and b, denoting the inputs to the function.
+
+Output format:
+For every test case, print a single line containing the output of the function given above.
+
+Constraints:
+1 <= T <= 105
+1 <= a,b <= 107
+
+Sample Input:
+2
+2 6
+5 10
+
+Sample Output:
+32
+79
+
+
