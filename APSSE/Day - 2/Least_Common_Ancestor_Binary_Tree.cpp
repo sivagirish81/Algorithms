@@ -61,7 +61,7 @@ Node* Least_Common_Ancestor(Node* node1,Node* node2)
     return Least_Common_Ancestor_Util(node1,l1,node2,l2);
 }
 
-// Given Only root node without paret nodes
+// Given Only root node without parent nodes
 
 int find(Node* root,Node* node)
 {
