@@ -28,7 +28,7 @@ int depth(Node* node)
         return 0;
     return depth(node->parent) + 1;
 }
-/* With Root */
+/* With Parent */
 Node* Least_Common_Ancestor_Util(Node* node1,int l1,Node* node2,int l2)
 {
     while (node1->parent != node2->parent)

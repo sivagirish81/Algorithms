@@ -18,10 +18,9 @@ Node* newNode(int data)
     node->data = data;
     node->left = node->right = NULL;
 }
-
+int prev_visit = INT_MIN;
 bool CheckBST(Node* root,int* prev_visit)
 {
-    prev_visit = ;
     if (root)
     {
         inorder(root->left,prev_visit);
@@ -38,7 +37,7 @@ bool CheckBST(Node* root))
     // Use a variable to store the previous value and keep checking whether the ith element is less than the (i - 1)th element
     // The range of the nodes is limited
     
-    for (int i = 0;i )
+    
 }
 int main()
 {
