@@ -52,6 +52,6 @@ int main()
     {
         scanf("%d",&Rp[i]);
     }
-    printf("Maximum sale price      : %d",CutRod(N,Rp));
+    printf("Maximum sale price      : %d\n",CutRod(N,Rp));
     printf("Maximum sale price by DP: %d",CutRodDP(N,Rp));
 }

@@ -6,6 +6,7 @@ def hack(S):
         return "21"
     arr=[i for i in range(1,len(S)+2)]
     #print(arr)
+    sp=[]
     for i in range(len(S),-1,-1):
         #print(S[i-1])
         if (S[i-1]=='-'):
