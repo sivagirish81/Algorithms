@@ -100,6 +100,7 @@ void in_order(Node* root)
     cout << endl;
     return;
 }
+
 int main()
 {
     int size = 5;
