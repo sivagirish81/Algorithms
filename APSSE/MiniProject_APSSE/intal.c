@@ -20,7 +20,7 @@ static char* reverse_string(char* intal)
 }
 
 // Add 2 intals
-char* intal_add(char* intal1, char* intal2)
+char* intal_add(const char* intal1, const char* intal2)
 {
     int l1 = strlen(intal1);                        // Length of 1st Intal
     int l2 = strlen(intal2);                        // Length of 2nd Intal
@@ -66,9 +66,27 @@ char* intal_add(char* intal1, char* intal2)
     return strrev(intal_sum);
 }
 
+int intal_compare(const char* intal1, const char* intal2)
+{
+    int l1 = strlen(intal1);
+    int l2 = strlen(intal2);
+    if (l1 > l2)
+        return 1;
+    else if (l1 < l2)
+        return -1;
+    int lmin = (l1 > l2)?l2:l1;
+    for (int i = 0;i < lmin;i++)
+        if (intal1[i] > intal2[i])
+            return 1;
+        else if (intal1[i] < intal2[i])
+            return -1;
+    return 0;
+}
+
 int main()                                                              // Test
 {
     char intal1[100] = "1234512345123451234512345";
     char intal2[100] = "543215432154321543215432154321";
     printf("%s\n",intal_add(intal1,intal2));
+    printf("%d\n",intal_compare("1234512345123451234512345","1234512345123451234512345"));
 }

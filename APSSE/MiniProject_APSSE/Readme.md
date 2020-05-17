@@ -13,5 +13,5 @@
 	+ Document containing specifications and instructions.
 	
 + intal.c
-	+ intal_add(char* intal1, char* intal2)
-	
+	+ intal_add(const char* intal1, const char* intal2)				```Done```
+	+ intal_compare(const char* intal1, const char* intal2)			```Done```
