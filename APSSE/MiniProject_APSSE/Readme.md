@@ -13,5 +13,6 @@
 	+ Document containing specifications and instructions.
 	
 + intal.c
-	+ intal_add(const char* intal1, const char* intal2)				```Done```
-	+ intal_compare(const char* intal1, const char* intal2)			```Done```
+	+ intal_add(const char* intal1, const char* intal2)				```Done - Testing Pending```
+	+ intal_compare(const char* intal1, const char* intal2)			```Done - Testing Pending```
+	+ int intal_max(char **arr, int n)								```Done - Testing Pending```

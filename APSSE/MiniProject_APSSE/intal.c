@@ -83,6 +83,25 @@ int intal_compare(const char* intal1, const char* intal2)
     return 0;
 }
 
+int intal_max(char **arr, int n)
+{
+    int max_len_till_now = strlen(arr[0]);
+    char* max_till_now = arr[0];
+    for (int i = 1;i < n;i++)
+    {
+        if (strlen(arr[i] < max_len_till_now))
+            continue;
+        else if (strlen(arr[i] > max_len_till_now))
+        {
+            max_len_till_now = strlen(arr[i]);
+            max_till_now = arr[i];
+        }
+        else
+            max_till_now = (intal_compare(max_till_now,arr[i]) == 1)?max_till_now:arr[i];
+    }
+    return max_till_now;
+}
+
 int main()                                                              // Test
 {
     char intal1[100] = "1234512345123451234512345";
