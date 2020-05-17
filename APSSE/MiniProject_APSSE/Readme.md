@@ -12,3 +12,6 @@
 + Problem Statement 
 	+ Document containing specifications and instructions.
 	
++ intal.c
+	+ intal_add(char* intal1, char* intal2)
+	
