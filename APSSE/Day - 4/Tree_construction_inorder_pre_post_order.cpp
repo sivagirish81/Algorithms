@@ -1,4 +1,4 @@
-// Given preorder and inorder find the binary tree
+    // Given preorder and inorder find the binary tree
 
 #include <iostream>
 #include <bits/stdc++.h>
