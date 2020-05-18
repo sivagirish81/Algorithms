@@ -26,6 +26,8 @@ char* intal_add(const char* intal1, const char* intal2)
     int l2 = strlen(intal2);                        // Length of 2nd Intal
     int lmin = (l1 < l2)?l1:l2;
     int lmax = (l1 > l2)?l1:l2;
+    if (l1 > l2)
+        swap(l1,l2);
     int ldiff = lmax - lmin;
     int carry = 0;
     // Allocate memory to intal sum - maximum size of added result can be lmax + 1 only
@@ -42,14 +44,16 @@ char* intal_add(const char* intal1, const char* intal2)
     }
 
     // Find the bigger length number - if it exists and add the remaining digits along with carry
+    /*
     char *itemp;
     if (lmax == l1)
         itemp = intal1;
     else
         itemp = intal2;
+    */
     for (int i = lmax - lmin - 1;i >= 0;i--)
     {
-        sum = (itemp[i] - '0') + carry;
+        sum = (intal2[i] - '0') + carry;
         carry = sum/10;
         temp = (sum%10) + '0';
         intal_sum[k++] = temp;
@@ -74,13 +78,65 @@ int intal_compare(const char* intal1, const char* intal2)
         return 1;
     else if (l1 < l2)
         return -1;
-    int lmin = (l1 > l2)?l2:l1;
-    for (int i = 0;i < lmin;i++)
+    for (int i = 0;i < l1;i++)
         if (intal1[i] > intal2[i])
             return 1;
         else if (intal1[i] < intal2[i])
             return -1;
     return 0;
+}
+
+static char* intal_differentiator(char* intal1,char* intal2)
+{
+    int diff = 0;
+    int carry = 0;
+    int l1 = strlen(intal1);
+    int l2 = strlen(intal2);
+    int lmin = (l1 < l2)?l1:l2;
+    int lmax = (l1 > l2)?l1:l2;
+    int ldiff = lmax - lmin;
+    char * intal_diff = (char*)calloc((lmax),sizeof(char));
+    char temp;
+    int k = 0;
+    for (int i = lmin - 1;i >= 0;i--)
+    {
+        diff = (intal1[i] - '0') + (intal2[i + diff] - '0') - carry;
+        if (diff < 0)
+        {
+            diff+=10;
+            carry = 1;
+        }
+        else
+            carry = 0;
+        temp = diff + '0';
+        intal_diff[k++] = temp;
+    }
+    
+    for (int i = lmax - lmin - 1;i >= 0;i--)
+    {
+        diff = (intal2[i] - '0') - carry;
+        if (diff < 0)
+        {
+            diff+=10;
+            carry = 1;
+        }
+        else
+            carry = 0;
+        temp = diff + '0';
+        intal_diff[k++] = temp;
+    }
+
+    return strrev(intal_diff);
+}
+
+char* intal_diff(const char* intal1, const char* intal2)
+{
+    if (intal_compare(intal1,intal2) == 1)
+        return intal_differentiator(intal2,intal1);
+    else if (intal_compare(intal1,intal2) == -1)
+        return intal_differentiator(intal1,intal2);
+    else
+        return "0";
 }
 
 int intal_max(char **arr, int n)
@@ -108,4 +164,5 @@ int main()                                                              // Test
     char intal2[100] = "543215432154321543215432154321";
     printf("%s\n",intal_add(intal1,intal2));
     printf("%d\n",intal_compare("1234512345123451234512345","1234512345123451234512345"));
+    printf("%s\n",intal_diff(intal1,intal2));
 }
