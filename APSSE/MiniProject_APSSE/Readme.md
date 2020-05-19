@@ -17,3 +17,4 @@
 	+ intal_compare(const char* intal1, const char* intal2)			```Done - Testing Pending```
 	+ int intal_max(char **arr, int n)								```Done - Testing Pending```
 	+ char* intal_diff(const char* intal1, const char* intal2)		```Bug - Fix Required	 ```
+	+ char* intal_multiply(const char* intal1, const char* intal2)	```Done - Testing Pending```

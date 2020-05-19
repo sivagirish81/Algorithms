@@ -10,7 +10,28 @@ static void swap(char* intal1,char* intal2)
     intal1 = temp;
 }
 
+static char* resize(char* intal)
+{
+    int l = strlen(intal);
+    int zero_count = 0;
+    for (int i = 0;i < l;i++)
+        if (intal[i] != '0')
+            break;
+        else if (intal[i] == '0')
+            zero_count++;
+    if (zero_count == l)
+        return "0";
+    if (zero_count == 0)
+        return intal;
+    // printf("Zero_Count : %d\n",zero_count);
+    char* res = (char*)calloc((l - zero_count + 1),sizeof(char));
+    strncpy(res,intal + zero_count,l - zero_count);
+    // res[strlen(res)] = '\0';
+    free(intal);
+    return res;
+}
 // Reverse a string
+/*
 static char* reverse_string(char* intal)
 {
     int intal_len = strlen(intal);
@@ -18,16 +39,14 @@ static char* reverse_string(char* intal)
         swap(intal[i],intal[intal_len - i - 1]);
     return intal;
 }
-
+*/
 // Add 2 intals
-char* intal_add(const char* intal1, const char* intal2)
+static char* intal_adder(const char* intal1,int l1,const char* intal2,int l2)
 {
-    int l1 = strlen(intal1);                        // Length of 1st Intal
-    int l2 = strlen(intal2);                        // Length of 2nd Intal
+    // printf("%s\n",intal1);
+    // printf("%s\n",intal2);
     int lmin = (l1 < l2)?l1:l2;
     int lmax = (l1 > l2)?l1:l2;
-    if (l1 > l2)
-        swap(l1,l2);
     int ldiff = lmax - lmin;
     int carry = 0;
     // Allocate memory to intal sum - maximum size of added result can be lmax + 1 only
@@ -41,16 +60,9 @@ char* intal_add(const char* intal1, const char* intal2)
         carry = sum/10;
         temp = (sum%10) + '0';
         intal_sum[k++] = temp;    
+        // printf("%d %c\n",k,temp);
     }
 
-    // Find the bigger length number - if it exists and add the remaining digits along with carry
-    /*
-    char *itemp;
-    if (lmax == l1)
-        itemp = intal1;
-    else
-        itemp = intal2;
-    */
     for (int i = lmax - lmin - 1;i >= 0;i--)
     {
         sum = (intal2[i] - '0') + carry;
@@ -65,11 +77,23 @@ char* intal_add(const char* intal1, const char* intal2)
         temp = carry + '0';
         intal_sum[k++] = temp;
     }
-
+    intal_sum[k] = '\0';
+    // Debug
+    // printf("\n***********************************************************\n");
     // Reverse the result for proper storage
-    return strrev(intal_sum);
+    return resize(strrev(intal_sum));
 }
 
+char* intal_add(const char* intal1, const char* intal2)
+{
+    // Debug
+    // printf("\n***********************************************************\n");
+    int l1 = strlen(intal1);                        // Length of 1st Intal
+    int l2 = strlen(intal2);                        // Length of 2nd Intal
+    if (l1 > l2)
+        return intal_adder(intal2,l2,intal1,l2);
+    return intal_adder(intal1,l1,intal2,l2);
+}
 int intal_compare(const char* intal1, const char* intal2)
 {
     int l1 = strlen(intal1);
@@ -86,7 +110,7 @@ int intal_compare(const char* intal1, const char* intal2)
     return 0;
 }
 
-static char* intal_differentiator(char* intal1,char* intal2)
+static char* intal_differentiator(const char* intal1,const char* intal2)
 {
     int diff = 0;
     int carry = 0;
@@ -98,9 +122,11 @@ static char* intal_differentiator(char* intal1,char* intal2)
     char * intal_diff = (char*)calloc((lmax),sizeof(char));
     char temp;
     int k = 0;
+    // printf("%s\n",intal1);
+    // printf("%s\n",intal2);
     for (int i = lmin - 1;i >= 0;i--)
     {
-        diff = (intal1[i] - '0') + (intal2[i + diff] - '0') - carry;
+        diff = (intal2[i + ldiff] - '0') - (intal1[i] - '0') - carry;
         if (diff < 0)
         {
             diff+=10;
@@ -109,6 +135,8 @@ static char* intal_differentiator(char* intal1,char* intal2)
         else
             carry = 0;
         temp = diff + '0';
+        // printf("Diff : %d\n",diff);
+        // printf("temp : %c\n",temp);
         intal_diff[k++] = temp;
     }
     
@@ -139,15 +167,130 @@ char* intal_diff(const char* intal1, const char* intal2)
         return "0";
 }
 
-int intal_max(char **arr, int n)
+char* intal_multiply(const char* intal1, const char* intal2)
+{
+    int l1 = strlen(intal1);
+    int l2 = strlen(intal2);
+    if (l1 == 0 || l2 == 0)
+        return "0";
+    char * intal_mul = (char*)calloc((l1 + l2 + 1),sizeof(char));
+    int carry;
+    int n_mul;
+    int t_mul;
+    int gpos = 0;
+    int cpos;
+    for (int i = l1 - 1;i >= 0;i--)
+    {
+        carry = 0;
+        n_mul = intal1[i] - '0';
+        cpos = 0;
+        for (int j = l2 - 1;j >= 0;j--)
+        {
+            if (!(intal_mul[gpos + cpos]))
+                intal_mul[gpos + cpos] = '0';
+            t_mul = n_mul * (intal2[j] - '0') + (intal_mul[gpos + cpos] - '0') + carry;
+            carry = t_mul/10;
+            intal_mul[gpos + cpos] = (t_mul%10) + '0';
+            cpos++;
+        }
+        if (!(intal_mul[gpos + cpos]))
+                intal_mul[gpos + cpos] = '0';
+        if (carry > 0)
+            intal_mul[gpos + cpos] = ((intal_mul[gpos + cpos] - '0') + carry) + '0';
+        gpos++;
+    }
+    return resize(strrev(intal_mul));
+}
+
+static char* Find_mod(const char* intal1, const char* intal2)
+{
+
+}
+
+char* intal_mod(const char* intal1, const char* intal2)
+{
+    int test = intal_compare(intal1,intal2);
+}
+
+char* intal_pow(const char* intal1, unsigned int n)
+{
+
+}
+
+char* intal_gcd(const char* intal1, const char* intal2)
+{
+
+}
+
+char* intal_fibonacci(unsigned int n)
+{
+    if (n == 0)
+        return "0";
+    if (n == 1)
+        return "1";
+    char* f1 = "1";
+    char* f2 = "1";
+    char* fibb;
+    for (int i = 0;i < n - 2;i++)
+    {
+        fibb = intal_add(f1,f2);
+        //printf("F1 : %s F2 : %s Fibb : %s\n",f1,f2,fibb);
+        f1 = f2;
+        f2 = fibb;
+    }
+    return fibb;
+}
+static char* tostring(int n)
+{
+    int temp = n;
+    int len = 0;
+    while (temp)
+    {
+        temp/=10;
+        len++;
+    }
+    char * str = (char*)calloc((len + 1),sizeof(char));
+    int k = 0;
+    while (n)
+    {
+        str[k++] = (n % 10) + '0';
+        n = n / 10;
+    }
+    str[len] = '\0';
+    return strrev(str);
+}
+
+char* intal_factorial(unsigned int n)
+{
+    char *res = (char*)calloc(1000,sizeof(char));
+    res[0] = '1';
+    printf(res);
+    char* num;
+    for (int i = 2;i <= n;i++)
+    {
+        num = tostring(i);
+        // printf("%s\n",num);
+        strcpy(res,intal_multiply(res,num));
+        // printf("%s\n",res);
+    }
+    realloc(res,strlen(res));
+    return res;
+}
+
+char* intal_bincoeff(unsigned int n, unsigned int k)
+{
+
+}
+
+char* intal_max(char **arr, int n)
 {
     int max_len_till_now = strlen(arr[0]);
     char* max_till_now = arr[0];
     for (int i = 1;i < n;i++)
     {
-        if (strlen(arr[i] < max_len_till_now))
+        if (strlen(arr[i]) < max_len_till_now)
             continue;
-        else if (strlen(arr[i] > max_len_till_now))
+        else if (strlen(arr[i]) > max_len_till_now)
         {
             max_len_till_now = strlen(arr[i]);
             max_till_now = arr[i];
@@ -158,11 +301,41 @@ int intal_max(char **arr, int n)
     return max_till_now;
 }
 
+int intal_min(char **arr, int n)
+{
+
+}
+
+int intal_search(char **arr, int n, const char* key)
+{
+
+}
+
+int intal_binsearch(char **arr, int n, const char* key)
+{
+
+}
+
+void intal_sort(char **arr, int n)
+{
+
+}
+
+char* coin_row_problem(char **arr, int n)
+{
+
+}
+
 int main()                                                              // Test
 {
     char intal1[100] = "1234512345123451234512345";
     char intal2[100] = "543215432154321543215432154321";
-    printf("%s\n",intal_add(intal1,intal2));
+    // printf("%s\n",intal_add("1234512345123451234512345","543215432154321543215432154321"));
+    printf("%s\n",intal_add("233","377"));
     printf("%d\n",intal_compare("1234512345123451234512345","1234512345123451234512345"));
-    printf("%s\n",intal_diff(intal1,intal2));
+    printf("%s\n",intal_diff("1234512345123451234512345","543215432154321543215432154321"));
+    printf("%s\n",intal_multiply("3","5432154321543215432154321"));
+    printf("%s\n",intal_fibonacci(1000));
+    printf("%s\n",resize("000398"));
+    printf("%s\n",intal_factorial(30));
 }
