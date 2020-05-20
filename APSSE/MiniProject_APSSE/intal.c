@@ -10,6 +10,7 @@ static void swap(char* intal1,char* intal2)
     intal1 = temp;
 }
 
+// Remove all leading Zeroes
 static char* resize(char* intal)
 {
     int l = strlen(intal);
@@ -202,6 +203,31 @@ char* intal_multiply(const char* intal1, const char* intal2)
     return resize(strrev(intal_mul));
 }
 
+static char* intal_div(const char* intal1,const char* intal2)
+{
+    char* ans = (char*)calloc(strlen(intal1),sizeof(char));
+    int i = 0;
+    char * t_num = (char*)calloc(strlen(intal2),sizeof(char));
+    while (intal_compare(t_num,intal2) < 0)
+        t_num[i] = intal1[i++];
+    printf("t_num : %s\n",t_num);
+    int q;
+    int k = 0;
+    while (strlen(intal1) > i)
+    {
+        q = 0;
+        while (intal_compare(t_num,intal2) > 0)
+        {
+            t_num = intal_diff(t_num,intal2);
+            printf("%s\n",t_num);
+            q++;
+        }
+        t_num[strlen(t_num)] = intal1[++i];
+        printf("%d\n",q);
+    }
+    return "test";
+}
+
 static char* Find_mod(const char* intal1, const char* intal2)
 {
 
@@ -210,11 +236,23 @@ static char* Find_mod(const char* intal1, const char* intal2)
 char* intal_mod(const char* intal1, const char* intal2)
 {
     int test = intal_compare(intal1,intal2);
+    if (test == -1)
+        return intal1;
+    else if (test == 0)
+        return "0";
+    // Find_mod(intal1,intal2);
 }
 
 char* intal_pow(const char* intal1, unsigned int n)
 {
-
+    //printf("n = %d\n",n);
+    if (n==0)
+        return "1";
+    char* res = intal_pow(intal1,n/2);
+    if (n%2)
+        return intal_multiply(intal1,intal_multiply(res,res));
+    else
+        return intal_multiply(res,res);
 }
 
 char* intal_gcd(const char* intal1, const char* intal2)
@@ -264,7 +302,7 @@ char* intal_factorial(unsigned int n)
 {
     char *res = (char*)calloc(1000,sizeof(char));
     res[0] = '1';
-    printf(res);
+    // printf(res);
     char* num;
     for (int i = 2;i <= n;i++)
     {
@@ -282,10 +320,11 @@ char* intal_bincoeff(unsigned int n, unsigned int k)
 
 }
 
-char* intal_max(char **arr, int n)
+int intal_max(char **arr, int n)
 {
     int max_len_till_now = strlen(arr[0]);
     char* max_till_now = arr[0];
+    int maxindex = 0;
     for (int i = 1;i < n;i++)
     {
         if (strlen(arr[i]) < max_len_till_now)
@@ -294,26 +333,66 @@ char* intal_max(char **arr, int n)
         {
             max_len_till_now = strlen(arr[i]);
             max_till_now = arr[i];
+            maxindex = i;
         }
         else
             max_till_now = (intal_compare(max_till_now,arr[i]) == 1)?max_till_now:arr[i];
     }
-    return max_till_now;
+    return maxindex;
 }
 
 int intal_min(char **arr, int n)
 {
-
+    int min_len_till_now = strlen(arr[0]);
+    char* min_till_now = arr[0];
+    int minindex = 0;
+    for (int i = 1;i < n;i++)
+    {
+        if (strlen(arr[i]) > min_len_till_now)
+            continue;
+        else if (strlen(arr[i]) < min_len_till_now)
+        {
+            min_len_till_now = strlen(arr[i]);
+            min_till_now = arr[i];
+            minindex = i;
+        }
+        else
+            min_till_now = (intal_compare(min_till_now,arr[i]) == 1)?min_till_now:arr[i];
+    }
+    return minindex;
 }
 
 int intal_search(char **arr, int n, const char* key)
 {
+    for (int i = 0;i < n;i++)
+        if (intal_compare(arr[i],key) == 0)
+            return i;
+    return -1;
+}
 
+static int intal_binsearch_util(char **arr, int start,int end,const char* key)
+{
+    int mid;
+    int temp;
+    while (start < end)
+    {
+        mid = start + (end - start)/2;
+        temp = intal_compare(arr[mid],key);
+        printf("%d\n",temp);
+        printf("%s\n",arr[mid]);
+        if (temp == 0)
+            return mid;
+        else if (temp > 0)
+            end = mid - 1;
+        else
+            start = mid + 1;
+    }
+    return -1;
 }
 
 int intal_binsearch(char **arr, int n, const char* key)
 {
-
+    return intal_binsearch_util(arr,0,n-1,key);
 }
 
 void intal_sort(char **arr, int n)
@@ -338,4 +417,30 @@ int main()                                                              // Test
     printf("%s\n",intal_fibonacci(1000));
     printf("%s\n",resize("000398"));
     printf("%s\n",intal_factorial(30));
+    printf("%s\n",intal_pow("2", 3000));
+
+    int n = 12;
+    char **a = (char**) malloc(n * sizeof(char*));
+	for(int i = 0; i < n; i++) {
+		a[i] = (char*) malloc(1001 * sizeof(char));
+	}
+	
+	strcpy(a[0], "1234512345123451234512345");
+	strcpy(a[1], "543215432154321543215432154321");
+	strcpy(a[2], "0");
+	strcpy(a[3], "1234512345123451234512345");
+	strcpy(a[4], "1234512345123451234512344");
+	strcpy(a[5], "12");
+	strcpy(a[6], "265252859812191058636308480000000");
+	strcpy(a[7], "265252859812191058636308480000000");
+	strcpy(a[8], "5432154321543215432154321");
+	strcpy(a[9], "3");
+	strcpy(a[10], "1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+	strcpy(a[11], "1230231922161117176931558813276752514640713895736833715766118029160058800614672948775360067838593459582429649254051804908512884180898236823585082482065348331234959350355845017413023320111360666922624728239756880416434478315693675013413090757208690376793296658810662941824493488451726505303712916005346747908623702673480919353936813105736620402352744776903840477883651100322409301983488363802930540482487909763484098253940728685132044408863734754271212592471778643949486688511721051561970432780747454823776808464180697103083861812184348565522740195796682622205511845512080552010310050255801589349645928001133745474220715013683413907542779063759833876101354235184245096670042160720629411581502371248008430447184842098610320580417992206662247328722122088513643683907670360209162653670641130936997002170500675501374723998766005827579300723253474890612250135171889174899079911291512399773872178519018229989376");
+
+    printf("%d\n",intal_max(a, n));
+    printf("%d\n",intal_min(a, n));
+    printf("%d\n",intal_search(a, n, a[7]));
+    printf("%d\n",intal_binsearch(a, n, "3"));
+    printf("%d\n",intal_div("35","7"));
 }
