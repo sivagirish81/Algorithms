@@ -57,6 +57,7 @@ static char* intal_adder(const char* intal1,int l1,const char* intal2,int l2)
     int k = 0;
     for (int i = lmin - 1;i >= 0;i--)
     {
+        // printf("%c %c %d\n",intal1[i],intal2[i + ldiff],i + ldiff);
         sum = (intal1[i] - '0') + (intal2[i + ldiff] - '0') + carry;
         carry = sum/10;
         temp = (sum%10) + '0';
@@ -91,8 +92,9 @@ char* intal_add(const char* intal1, const char* intal2)
     // printf("\n***********************************************************\n");
     int l1 = strlen(intal1);                        // Length of 1st Intal
     int l2 = strlen(intal2);                        // Length of 2nd Intal
+    // printf("%d %d/n",l1,l2);
     if (l1 > l2)
-        return intal_adder(intal2,l2,intal1,l2);
+        return intal_adder(intal2,l2,intal1,l1);
     return intal_adder(intal1,l1,intal2,l2);
 }
 int intal_compare(const char* intal1, const char* intal2)
@@ -127,7 +129,9 @@ static char* intal_differentiator(const char* intal1,const char* intal2)
     // printf("%s\n",intal2);
     for (int i = lmin - 1;i >= 0;i--)
     {
+        // printf("%c %c %d\n",intal1[i],intal2[i + ldiff],i + ldiff);
         diff = (intal2[i + ldiff] - '0') - (intal1[i] - '0') - carry;
+        // printf("diff : %d\n",diff);
         if (diff < 0)
         {
             diff+=10;
@@ -215,8 +219,8 @@ static char* intal_div(const char* intal1,const char* intal2)
         i++;
     }
     t_num[i] = '\0';
-    printf("t_num : %s\n",t_num);
-    printf("HI %d\n",intal_diff(t_num,intal2));
+    // printf("t_num : %s\n",t_num);
+    // printf("HI %d\n",intal_diff(t_num,intal2));
     int q;
     int k = 0;
     int l = strlen(intal1);
@@ -231,15 +235,16 @@ static char* intal_div(const char* intal1,const char* intal2)
             q++;
         }
         t_num[strlen(t_num)] = intal1[i];
-        printf("%d %d\n",q,i);
+        ans[k++] = q + '0';
         i++;
     }
-    return "test";
+    return ans;
 }
 
+// Have to complete
 static char* Find_mod(const char* intal1, const char* intal2)
 {
-
+    return "1";
 }
 
 char* intal_mod(const char* intal1, const char* intal2)
@@ -249,7 +254,7 @@ char* intal_mod(const char* intal1, const char* intal2)
         return intal1;
     else if (test == 0)
         return "0";
-    // Find_mod(intal1,intal2);
+    return "1";
 }
 
 char* intal_pow(const char* intal1, unsigned int n)
@@ -264,9 +269,10 @@ char* intal_pow(const char* intal1, unsigned int n)
         return intal_multiply(res,res);
 }
 
+// Have to complete
 char* intal_gcd(const char* intal1, const char* intal2)
 {
-
+    return "1";
 }
 
 char* intal_fibonacci(unsigned int n)
@@ -330,16 +336,15 @@ char* intal_bincoeff(unsigned int n, unsigned int k)
     bincoeff[0] = "1";
     for (int i = 1;i <= n;i++)
     {
-        int j = (i < k)?i:k;
-        for (;j > 0;j--)
+        for (int j = (i < k)?i:k;j > 0;j--)
         {
             if (!(bincoeff[j]))
                 bincoeff[j] = "0";
             bincoeff[j] = intal_add(bincoeff[j],bincoeff[j - 1]);
-            printf("%d %d Bincoeff : %s\n",i,j,bincoeff[j]);
+            // printf("%d %d Bincoeff : %s\n",i,j,bincoeff[j]);
         }
     }
-    printf("%s\n",bincoeff[k]);
+    // printf("%s\n",bincoeff[k]);
     return bincoeff[k];
 }
 
@@ -497,9 +502,9 @@ char* coin_row_problem(char **arr, int n)
     char * temp;
     for (int i = 2;i <= n;i++)
     {
-        printf("%s %s %s %s\n",DP0,DP1,DPN,arr[i - 1]);
+        // printf("%s %s %s %s\n",DP0,DP1,DPN,arr[i - 1]);
         temp = intal_add(DP0,arr[i - 1]);
-        printf("temp : %s\n",temp);
+        // printf("temp : %s\n",temp);
         if (intal_compare(temp,DP1) == 1)
             DPN = temp;
         else
@@ -512,11 +517,12 @@ char* coin_row_problem(char **arr, int n)
     return DPN;
 }
 
+/*
 int main()                                                              // Test
 {
     char intal1[100] = "1234512345123451234512345";
     char intal2[100] = "543215432154321543215432154321";
-    printf("%s\n",intal_add("2","39"));
+    // printf("%s\n",intal_add("10","5"));
     // printf("%s\n",intal_add("233","377"));
     // printf("%d\n",intal_compare("1234512345123451234512345","1234512345123451234512345"));
     // printf("%s\n",intal_diff("35","7"));
@@ -555,12 +561,13 @@ int main()                                                              // Test
 	// }
 	// printf("\n");
     // printf("%d\n",intal_binsearch(a, n, "3"));
-    // printf("%d\n",intal_div("35","7"));
-    // char *b[7] = {"10", "2", "4", "6", "3", "9", "5"};
-    // printf("%s\n",coin_row_problem(b, 7));
-
-    // printf("%s\n",intal_bincoeff(10, 8));
-    // printf("%s\n",intal_bincoeff(10, 8));
+    // printf("%s\n",intal_diff("35","7"));
+    // printf("%s\n",intal_div("35","7"));
+    //char *b[7] = {"10", "2", "4", "6", "3", "9", "5"};
+    //printf("%s\n",coin_row_problem(b, 7));
+    //printf("%s\n",intal_bincoeff(10, 8));
+    //printf("%s\n",intal_bincoeff(10, 2));
     // printf("%s\n",intal_bincoeff(1000,10));
 
 }
+*/
