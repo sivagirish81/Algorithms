@@ -247,6 +247,7 @@ static char* Find_mod(const char* intal1, const char* intal2)
     return "1";
 }
 
+
 char* intal_mod(const char* intal1, const char* intal2)
 {
     int test = intal_compare(intal1,intal2);
@@ -260,9 +261,14 @@ char* intal_mod(const char* intal1, const char* intal2)
 char* intal_pow(const char* intal1, unsigned int n)
 {
     //printf("n = %d\n",n);
+    char* res;
     if (n==0)
-        return "1";
-    char* res = intal_pow(intal1,n/2);
+    {
+        res = (char*)calloc(2,sizeof(char));
+        res[0] = '1';
+        return res;
+    }
+    res = intal_pow(intal1,n/2);
     if (n%2)
         return intal_multiply(intal1,intal_multiply(res,res));
     else
